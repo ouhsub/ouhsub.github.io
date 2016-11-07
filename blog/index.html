@@ -1,0 +1,23 @@
+---
+layout: default
+title: 博客 | Ouhsub
+---
+
+<h2>全部文章</h2>
+<div>
+  <ul>
+    {% for category in site.categories %}
+      {% if category[0] == 'blogs' %}
+        {% assign pages_list = category[1] %}
+        {% for node in pages_list %}
+        <li>
+          <a href="{{ BASE_PATH }}{{node.url}}">
+            <h3>{{node.title}}</h3>
+            <p>{{ node.excerpt }}</p>
+          </a>
+        </li>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>

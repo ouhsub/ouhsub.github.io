@@ -1,0 +1,18 @@
+---
+layout: default
+title: 首页 | Ouhsub
+---
+
+<h2>最新文章</h2>
+<div>
+  <ul>
+    {% for post in site.posts %}
+    <li>
+      <a href="{{ BASE_PATH }}{{ post.url }}">
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.date | date_to_string }} | {{ post.excerpt }}</p>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
