@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: blog
 title: 标签 | Ouhsub
 script: tag
 ---
@@ -10,8 +10,7 @@ script: tag
   <h3>{{ tag[0] }}</h3>
   {% assign pages_list = tag[1] %}
   {% for node in pages_list %}
-    <li><a href="{{ BASE_PATH }}{{node.url}}">{{node.title}}</a></li>
+  <li><a href="{{ BASE_PATH }}{{node.url}}">{{node.title}}</a></li>
   {% endfor %}
 </ul>
 {% endfor %}
-{% include siderbar.html %}

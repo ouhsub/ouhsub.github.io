@@ -4,10 +4,15 @@
 <body>
   {% include header.html %}
   <main>
-    <article>
-      {{content}}
-    </article>
-    {% include siderbar.html %}
+    <div class="main-container">
+      <article class="article-container">
+        <div>
+          {{content}}
+        </div>
+      </article>
+      {% include siderbar.html %}
+      {% include gotop.html %}
+    </div>
   </main>
   {% include footer.html %}
 </body>
