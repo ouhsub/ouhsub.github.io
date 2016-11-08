@@ -3,21 +3,39 @@ layout: default
 title: 博客 | Ouhsub
 ---
 
-<h2>全部文章</h2>
-<div>
-  <ul>
-    {% for category in site.categories %}
-      {% if category[0] == 'blogs' %}
-        {% assign pages_list = category[1] %}
-        {% for node in pages_list %}
-        <li>
-          <a href="{{ BASE_PATH }}{{node.url}}">
-            <h3>{{node.title}}</h3>
-            <p>{{ node.excerpt }}</p>
-          </a>
-        </li>
-        {% endfor %}
-      {% endif %}
-    {% endfor %}
-  </ul>
-</div>
+{% include slider.html %}
+<h1>全部文章</h1>
+<ul>
+  {% for category in site.categories %}
+    {% if category[0] == 'blogs' %}
+      {% assign pages_list = category[1] %}
+      {% for node in pages_list %}
+      <li>
+        <div>
+          <p>{{ node.date | date_to_string }}</p>
+          <p>
+            {% for cate in node.categories %}
+              {% if cate != 'blogs' %}
+              <a href="{{ BASE_PATH }}/category/?target={{ cate }}">{{ cate }}</a>
+              {% endif %}
+            {% endfor %}
+          </p>
+          <p>
+            {% for tag in node.tags %}
+            <a href="{{ BASE_PATH }}/tag/?target={{tag}}">{{ tag }}</a>
+            {% endfor %}
+          </p>
+        </div>
+        <div>
+          <div>
+            <a href="{{ BASE_PATH }}{{node.url}}">
+              <h3>{{node.title}}</h3>
+              <p>{{ node.excerpt }}</p>
+            </a>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+</ul>

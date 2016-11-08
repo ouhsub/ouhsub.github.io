@@ -2,3 +2,7 @@
   <hr>
   &copy; Ouhsub 2016
 </footer>
+<script src="/assets/js/main.js"></script>
+{% if page.script != null %}
+<script src="/assets/js/{{ page.script }}.js"></script>
+{% endif %}

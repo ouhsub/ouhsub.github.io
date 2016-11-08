@@ -3,4 +3,27 @@ layout: default
 title:  作品 | Ouhsub
 ---
 
-<h2>作品目录</h2>
+{% include timeline.html %}
+<h1>作品列表</h1>
+<ul>
+  {% for category in site.categories %}
+    {% if category[0] == 'projects' %}
+      {% assign pages_list = category[1] %}
+      {% for node in pages_list %}
+      <li>
+        <div>
+          <a href="{{ BASE_PATH }}{{node.url}}">
+            <h3>{{ node.title }}</h3>
+            <p>摘要</p>
+          </a>
+          {% for tag in node.tags %}
+          <a href="{{ BASE_PATH }}/tag/?target={{ tag }}">
+            <span>{{ tag }}</span>
+          </a>
+          {% endfor %}
+        </div>
+      </li>
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+</ul>

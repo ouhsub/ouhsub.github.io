@@ -1,0 +1,16 @@
+<div>
+  <h2>分类</h2>
+  <ul>
+    {% for cate in site.categories %}
+    {% if cate[0] != 'blogs' and cate[0] != 'projects' %}
+    <li><a href="{{ BASE_PATH }}/category/?target={{ cate[0] }}"><h3>{{ cate[0] }}</h3></a></li>
+    {% endif %}
+    {% endfor %}
+  </ul>
+  <h2>标签云</h2>
+  <div>
+    {% for tag in site.tags %}
+    <a href="{{ BASE_PATH }}/tag/?target={{ tag[0] }}">{{ tag[0] }}&nbsp;</a>
+    {% endfor %}
+  </div>
+</div>
