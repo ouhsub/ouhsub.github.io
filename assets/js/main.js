@@ -1,5 +1,6 @@
 setActiveNav();
-
+setFooter();
+window.onresize = setFooter;
 var fix_btn = document.getElementById('fix_btn');
 if(fix_btn){
   fix_btn.onclick = setFixedNav;
@@ -10,12 +11,7 @@ if(timeline_btn){
   timeline_btn.onclick = setTimeline;
 }
 
-var timeline = document.getElementById('timeline');
-if(!timeline){
-  timeline_btn.parentNode.className = 'nav-right hidden';
-}else{
-  timeline_btn.parentNode.className = 'nav-right';
-}
+setTimelineBtn();
 
 /* 设置当前菜单项 */
 function setActiveNav(){
@@ -31,7 +27,6 @@ function setActiveNav(){
       path = path;
     }
   }
-  console.log(path);
   var id = path + '_link';
   document.getElementById(id).className = 'active';
 }
@@ -66,4 +61,45 @@ function setTimeline(){
     timeline_btn.setAttribute('class','show-timeline');
     handler.setAttribute('transform','translate(100,100) rotate(90)');
   }
+  setFooter();
+}
+
+/* 时间轴按钮显示切换 */
+function setTimelineBtn(){
+  var timeline = document.getElementById('timeline');
+  if(!timeline){
+    timeline_btn.parentNode.className = 'nav-right hidden';
+  }else{
+    timeline_btn.parentNode.className = 'nav-right';
+  }
+}
+
+/* 页尾位置切换 */
+function setFooter(){
+  var header = document.getElementsByTagName('header')[0];
+  var main = document.getElementsByTagName('main')[0];
+  var footer = document.getElementsByTagName('footer')[0];
+
+  var headHeight = header.clientHeight,
+      mainHeight = main.clientHeight,
+      footHeight = footer.clientHeight,
+      baseHeight = headHeight + mainHeight + footHeight,
+      windHeight = getWindowHeight(),
+      diff = windHeight - baseHeight;
+  if(diff > 0){
+    footer.className = 'absolute';
+  }else if(diff < 0){
+    footer.className = '';
+  }
+}
+
+/* 获取视口高度 */
+function getWindowHeight(){
+  var winHeight;
+  if (window.innerHeight){
+    winHeight = window.innerHeight;
+  }else if ((document.body) && (document.body.clientHeight)){
+    winHeight = document.body.clientHeight;
+  }
+  return winHeight;
 }
