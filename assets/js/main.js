@@ -11,6 +11,11 @@ if(timeline_btn){
   timeline_btn.onclick = setTimeline;
 }
 
+var gotop_widget = document.getElementById('gotop_widget');
+gotop_widget.onclick = scrollToTop;
+setGotopWidget();
+window.onscroll = setGotopWidget;
+
 setTimelineBtn();
 
 /* 设置当前菜单项 */
@@ -102,4 +107,30 @@ function getWindowHeight(){
     winHeight = document.body.clientHeight;
   }
   return winHeight;
+}
+
+/* 设置gotop部件 */
+function setGotopWidget(){
+  var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+  if(scrollTop > 80){
+    gotop_widget.className = 'gotop';
+  }else{
+    gotop_widget.className = 'gotop hidden';
+  }
+}
+
+/* 滚动到顶部 */
+function scrollToTop(){
+  var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+  function goTop(){
+    scrollTop -= 10;
+    scrollTop = scrollTop<0 ? 0 : scrollTop;
+    document.documentElement.scrollTop = scrollTop;
+    window.pageYOffset = scrollTop;
+    document.body.scrollTop = scrollTop;
+    if(scrollTop>0){
+      setTimeout(goTop,5);
+    }
+  }
+  goTop();
 }

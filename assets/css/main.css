@@ -64,6 +64,7 @@ main {
   width: 40px;
   height: 40px;
   overflow: hidden;
+  cursor: pointer;
 }
 footer {
   overflow: hidden;
