@@ -7,7 +7,7 @@ script: category
 <h1>文章归档</h1>
 <div>
   {% for cate in site.categories %}
-  <ul data-type="{{ cate[0] }}">
+  <ul data-type="{{ cate[0] }}" class="hidden">
     <h2>{{ cate[0] }}</h2>
     {% assign pages_list = cate[1] %}
     {% for node in pages_list %}

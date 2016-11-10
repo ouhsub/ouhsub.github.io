@@ -14,7 +14,37 @@ if(timeline_btn){
 var gotop_widget = document.getElementById('gotop_widget');
 gotop_widget.onclick = scrollToTop;
 setGotopWidget();
-window.onscroll = setGotopWidget;
+window.onscroll = function(){
+  setGotopWidget();
+  setSiderbar();
+};
+
+//TODO 优化这段代码
+var category_icon = document.getElementById('category_icon');
+var tag_icon = document.getElementById('tag_icon');
+var dismiss_category = document.getElementById('dismiss_category');
+var dismiss_tag = document.getElementById('dismiss_tag');
+if(category_icon){
+  category_icon.onclick = function(){
+    displayWidget('category');
+  };
+  dismiss_category.onclick = function(){
+    displayWidget('category');
+  };
+}
+if(tag_icon){
+  tag_icon.onclick = function(){
+    displayWidget('tag');
+  };
+  dismiss_tag.onclick = function(){
+    displayWidget('tag');
+  };
+}
+
+var contact_btn = document.getElementById('contact_btn');
+if(contact_btn){
+  contact_btn.onclick = setContactIcons;
+}
 
 setTimelineBtn();
 
@@ -133,4 +163,60 @@ function scrollToTop(){
     }
   }
   goTop();
+}
+
+/* siderbar位置变化 */
+function setSiderbar(){
+  var siderbar = document.getElementById('siderbar');
+  if(siderbar){
+    var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+    var distance;
+    if(getStyle(document.getElementById('dismiss_tag')).display === 'none'){
+      if(getStyle(document.getElementsByTagName('header')[0]).position === 'fixed'){
+        distance = scrollTop;
+      }else{
+        if(scrollTop > 80){
+          distance = scrollTop - 80;
+        }else{
+          distance = 0;
+        }
+      }
+      siderbar.style.marginTop = '' + distance + 'px';
+    }
+  }else{
+    return;
+  }
+}
+
+/* 类目/标签部件显示设置 */
+function displayWidget(type){
+  var container = document.getElementById(type + '_container');
+  if(container.className === type + '-container'){
+    container.className = type + '-container show';
+    document.documentElement.style.overflow='hidden';//禁止滚动
+  }else{
+    container.className = type + '-container';
+    document.documentElement.style.overflow='scroll';//恢复滚动
+  }
+}
+
+/* 获取元素计算后的样式 */
+function getStyle(obj){
+  var style = null;
+  if (window.getComputedStyle) {
+      style = window.getComputedStyle(obj, null);
+  } else {
+      style = obj.currentStyle;
+  }
+  return style;
+}
+
+/* 设置contact icon显示 */
+function setContactIcons(){
+  var container = document.getElementById('contact_container');
+  if(container.className === 'contact-container'){
+    container.className = 'contact-container show';
+  }else{
+    container.className = 'contact-container';
+  }
 }

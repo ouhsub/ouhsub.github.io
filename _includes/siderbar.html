@@ -1,16 +1,47 @@
-<div class="siderbar">
-  <h2>分类</h2>
-  <ul>
-    {% for cate in site.categories %}
-    {% if cate[0] != 'blogs' and cate[0] != 'projects' %}
-    <li><a href="{{ BASE_PATH }}/category/?target={{ cate[0] }}"><h3>{{ cate[0] }}</h3></a></li>
-    {% endif %}
-    {% endfor %}
-  </ul>
-  <h2>标签云</h2>
-  <div>
-    {% for tag in site.tags %}
-    <a href="{{ BASE_PATH }}/tag/?target={{ tag[0] }}">{{ tag[0] }}&nbsp;</a>
-    {% endfor %}
+<div class="siderbar" id="siderbar">
+  <svg width="40" height="40" class="siderbar-icon category-icon" id="category_icon">
+    <g transform="translate(20,20) scale(0.2,0.2)" fill="#333" opacity="0.5">
+      <rect x="4" y="4" width="50" height="50" rx="10"></rect>
+      <rect x="4" y="-54" width="50" height="50" rx="10"></rect>
+      <rect x="-54" y="-54" width="50" height="50" rx="10"></rect>
+      <rect x="-54" y="4" width="50" height="50" rx="10"></rect>
+    </g>
+  </svg>
+  <div class="category-container" id="category_container">
+    <div class="dismiss-icon" id="dismiss_category">
+      <svg width="30" height="30" opacity="0.5">
+        <g transform="translate(15,15)">
+          <line x1="-10" x2="10" y1="0" y2="0" transform="rotate(45)" stroke="#333" stroke-width="4"></line>
+          <line x1="-10" x2="10" y1="0" y2="0" transform="rotate(-45)" stroke="#333" stroke-width="4"></line>
+        </g>
+      </svg>
+    </div>
+    <ul>
+      {% for cate in site.categories %}
+      {% if cate[0] != 'blogs' and cate[0] != 'projects' %}
+      <li class="category-item"><a href="{{ BASE_PATH }}/category/?target={{ cate[0] }}">{{ cate[0] }}</a></li>
+      {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+  <svg width="40" height="40" class="siderbar-icon tag-icon" id="tag_icon">
+    <g transform="translate(20,20) scale(0.2,0.2)" fill="#333" opacity="0.5">
+      <path d="M50.503-1.625L7.394-45.534C2.811-50.189-6.189-53.97-12.71-53.97L-46.078-54c-4.267,0-7.73,3.451-7.74,7.708l-0.095,32.606c-0.02,6.528,3.705,15.557,8.311,20.177l43.942,44.042c4.619,4.621,12.087,4.621,16.707,0.01l35.375-35.379C55.042,10.54,55.086,3.033,50.503-1.625z M-19.98-20.016c-4.24,4.227-11.108,4.227-15.353,0c-4.245-4.231-4.236-11.112,0-15.351c4.235-4.248,11.103-4.232,15.353,0C-15.742-31.138-15.742-24.248-19.98-20.016z"></path>
+    </g>
+  </svg>
+  <div class="tag-container" id="tag_container">
+    <div class="dismiss-icon" id="dismiss_tag">
+      <svg width="30" height="30" opacity="0.5">
+        <g transform="translate(15,15)">
+          <line x1="-10" x2="10" y1="0" y2="0" transform="rotate(45)" stroke="#333" stroke-width="4"></line>
+          <line x1="-10" x2="10" y1="0" y2="0" transform="rotate(-45)" stroke="#333" stroke-width="4"></line>
+        </g>
+      </svg>
+    </div>
+    <div>
+      {% for tag in site.tags %}
+      <a class="tag-item" href="{{ BASE_PATH }}/tag/?target={{ tag[0] }}">{{ tag[0] }}&nbsp;</a>
+      {% endfor %}
+    </div>
   </div>
 </div>

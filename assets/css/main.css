@@ -11,6 +11,7 @@ body {
 ul,li{
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 /* 页面布局 */
@@ -92,14 +93,6 @@ footer {
   .article-container>div {
     padding-left: 0;
   }
-  .siderbar {
-    position: fixed;
-    bottom: 50px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
-    margin: 0;
-  }
 }
 /* header */
 header>nav {
@@ -109,9 +102,6 @@ header>nav {
 .fixed{
   position: fixed;
   z-index: 1;
-}
-.nav-container {
-  list-style: none;
 }
 .nav-container>li{
   float: left;
@@ -207,6 +197,9 @@ header>nav {
 .contact-container>a {
   text-decoration: none;
 }
+.contact-btn {
+  display: none;
+}
 .ft-circle {
   stroke: #fff;
 }
@@ -227,5 +220,86 @@ header>nav {
   }
   .contact-container {
     display: none;
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    margin: 0;
+    width: 100%;
+    height: 40px;
+    text-align: right;
+  }
+  .contact-btn {
+    display: block;
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    bottom: 50px;
+    right: 10px;
+    cursor: pointer;
+  }
+}
+
+/* siderbar */
+.category-item>a,
+.tag-item {
+  font-size: 1.2em;
+  text-decoration: none;
+  color: #333;
+  line-height: 1.2em;
+}
+.category-item>a:hover,
+.tag-item:hover {
+  color: #000;
+  text-decoration: underline;
+}
+.tag-item {
+  font-size: 0.9em;
+}
+.dismiss-icon {
+  display: none;
+}
+.category-container {
+  margin-bottom: 20px;
+}
+@media screen and (max-width: 767px) {
+  .siderbar-icon {
+    position: fixed;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+  }
+  .category-icon {
+    bottom: 130px;
+  }
+  .tag-icon {
+    bottom: 90px;
+  }
+  .category-container,
+  .tag-container {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: #fff;
+  }
+  .show {
+    display: block;
+  }
+  .category-container {
+    z-index: 11;
+  }
+  .category-container>ul,
+  .tag-container>div:last-child {
+    margin: 40px 20px;
+  }
+  .dismiss-icon {
+    display: block;
+    float: right;
+    width: 30px;
+    height: 30px;
+    margin: 10px;
   }
 }
