@@ -5,15 +5,23 @@ title: 首页 | Ouhsub
 
 {% include timeline.html %}
 <div class="main-container">
-  <h1>最新文章</h1>
+  <h1 class="main-title">最新文章</h1>
   <div>
     <ul>
       {% for category in site.categories %}
       {% if category[0] == 'blogs' %}
       {% assign pages_list = category[1] %}
       {% for node in pages_list %}
-      <li>
-        <div>
+      <li class="article-item">
+        <div class="article-title-container">
+          <div>
+            <a href="{{ BASE_PATH }}{{node.url}}">
+              <h2 class="article-title-text">{{ node.title }}</h2>
+              <p class="article-excerpt">{{ node.excerpt }}</p>
+            </a>
+          </div>
+        </div>
+        <div class="article-info-container">
           <p>{{ node.date | date_to_string }}</p>
           <p>
             {% for cate in node.categories %}
@@ -27,14 +35,6 @@ title: 首页 | Ouhsub
             <a href="{{ BASE_PATH }}/tag/?target={{tag}}">{{ tag }}</a>
             {% endfor %}
           </p>
-        </div>
-        <div>
-          <div>
-            <a href="{{ BASE_PATH }}{{node.url}}">
-              <h2>{{node.title}}</h2>
-              <p>{{ node.excerpt }}</p>
-            </a>
-          </div>
         </div>
       </li>
       {% endfor %}

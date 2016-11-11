@@ -5,23 +5,28 @@ title:  作品 | Ouhsub
 
 {% include timeline.html %}
 <div class="main-container">
-  <h1>作品列表</h1>
+  <h1 class="main-title">作品列表</h1>
   <ul>
     {% for category in site.categories %}
     {% if category[0] == 'projects' %}
     {% assign pages_list = category[1] %}
     {% for node in pages_list %}
-    <li>
-      <div>
-        <a href="{{ BASE_PATH }}{{node.url}}">
-          <h3>{{ node.title }}</h3>
-          <p>摘要</p>
+    <li class="project-item">
+      <div class="project-info-container">
+        <a href="{{ BASE_PATH }}{{ node.url }}">
+          <h2>{{ node.title }}</h2>
+          <p>{{ node.excerpt }}</p>
         </a>
         {% for tag in node.tags %}
-        <a href="{{ BASE_PATH }}/tag/?target={{ tag }}">
+        <a class="project-tags-container" href="{{ BASE_PATH }}/tag/?target={{ tag }}">
           <span>{{ tag }}</span>
         </a>
         {% endfor %}
+      </div>
+      <div class="project-img-container">
+        <a href="{{ BASE_PATH }}{{ node.url }}">
+          <img src="/assets/img/project/{{ node.img }}" alt="{{ node.title }}">
+        </a>
       </div>
     </li>
     {% endfor %}

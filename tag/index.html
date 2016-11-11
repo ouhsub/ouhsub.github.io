@@ -4,13 +4,18 @@ title: 标签 | Ouhsub
 script: tag
 ---
 
-<h1>标签归档</h1>
 {% for tag in site.tags %}
 <ul class="hidden" data-type="{{ tag[0] }}">
-  <h3>{{ tag[0] }}</h3>
+  <h1 class="kind-title">{{ tag[0] }}</h1>
   {% assign pages_list = tag[1] %}
   {% for node in pages_list %}
-  <li><a href="{{ BASE_PATH }}{{ node.url }}">{{node.title}}</a></li>
+  <li class="kind-item">
+    <a href="{{ BASE_PATH }}{{node.url}}">
+      <h2>{{ node.title }}</h2>
+      <p>{{ node.excerpt }}</p>
+    </a>
+    <span>{{ node.date | date_to_string }}</span>
+  </li>
   {% endfor %}
 </ul>
 {% endfor %}

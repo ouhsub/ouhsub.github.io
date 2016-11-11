@@ -64,6 +64,9 @@ function setActiveNav(){
   }
   var id = path + '_link';
   document.getElementById(id).className = 'active';
+  if(path === 'about'){
+    document.getElementById('contact_btn').style.display = 'none';
+  }
 }
 
 /* 导航条固定转换 */
