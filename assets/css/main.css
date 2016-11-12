@@ -495,3 +495,110 @@ header>nav {
 .go-back:hover{
   opacity: 1;
 }
+
+/* about */
+.about-item {
+  margin-bottom: 40px;
+}
+.about-title h1{
+  font-size: 1.1em;
+  color: #aaa;
+  border-bottom: 2px solid #aaa;
+  margin: 0 0 10px;
+}
+.profile-container {
+  margin-top: 40px;
+  min-height: 300px;
+}
+.profile-img {
+  float: left;
+  width: 300px;
+  height: 300px;
+}
+.profile-text p {
+  text-indent: 2em;
+  color: #333;
+}
+.form-item {
+  margin-bottom: 20px;
+}
+.form-item label {
+  display: inline-block;
+  width: 200px;
+  text-align: right;
+  margin-right: 20px;
+}
+.form-item input,
+.form-item textarea {
+  border: 0;
+  border-bottom: 2px solid #ccc;
+  height: 20px;
+  width: 200px;
+  font-size: 1.2em;
+  resize: none;
+}
+.form-item input:focus,
+.form-item textarea:focus {
+  border: 0;
+  border-bottom: 2px solid #666;
+  outline: 0;
+}
+.form-item textarea {
+  width: 400px;
+}
+.submit-btn {
+  margin-left: 220px;
+  width: 50px;
+  height: 30px;
+  background-color: #fff;
+}
+.has-error {
+  color: red;
+}
+.has-error input,
+.has-error textarea,
+.has-error textarea:focus,
+.has-error input:focus {
+  border-bottom-color: red;
+  color: red;
+}
+.help-block {
+  display: none;
+  margin: 10px 0 0 220px;
+  font-size: 0.8em;
+}
+.has-error .help-block{
+  display: block;
+}
+.email-feed {
+  margin-left: 220px;
+}
+.email-success {
+  color: green;
+}
+.email-failure {
+  color: red;
+}
+@media screen and (max-width: 767px) {
+  .form-item label {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 0 0 20px 0;
+  }
+  .form-item textarea {
+    width: 100%;
+  }
+  .help-block {
+    margin: 10px 0 0;
+  }
+  .submit-btn,
+  .email-feed {
+    margin: 0;
+  }
+  .profile-img {
+    float: none;
+    width: auto;
+    height: auto;
+  }
+}

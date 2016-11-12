@@ -66,6 +66,8 @@ function setActiveNav(){
   document.getElementById(id).className = 'active';
   if(path === 'about'){
     document.getElementById('contact_btn').style.display = 'none';
+    var contact = document.getElementById('contact_container');
+    contact.parentNode.removeChild(contact);
   }
 }
 
@@ -193,13 +195,17 @@ function setSiderbar(){
 
 /* 类目/标签部件显示设置 */
 function displayWidget(type){
-  var container = document.getElementById(type + '_container');
-  if(container.className === type + '-container'){
-    container.className = type + '-container show';
-    document.documentElement.style.overflow='hidden';//禁止滚动
+  if(getStyle(document.getElementById('category_icon')).position === 'fixed'){
+    var container = document.getElementById(type + '_container');
+    if(container.className === type + '-container'){
+      container.className = type + '-container show';
+      document.documentElement.style.overflow='hidden';//禁止滚动
+    }else{
+      container.className = type + '-container';
+      document.documentElement.style.overflow='scroll';//恢复滚动
+    }
   }else{
-    container.className = type + '-container';
-    document.documentElement.style.overflow='scroll';//恢复滚动
+    return;
   }
 }
 
