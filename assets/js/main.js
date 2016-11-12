@@ -48,6 +48,23 @@ if(contact_btn){
 
 setTimelineBtn();
 
+var search_btn = document.getElementById('search_btn');
+search_btn.onclick = function(){
+  showSearchPage();
+};
+var dismiss_search_btn = document.getElementById('dismiss_search');
+dismiss_search_btn.onclick = function(){
+  hideSearchPage();
+};
+var search_input = document.getElementById('search_input');
+var search_page_btn = document.getElementById('search_page_btn');
+search_input.onblur = function(){
+  setSearchBtn();
+};
+search_input.onkeyup = function(){
+  setSearchBtn();
+};
+search_page_btn.onclick = makeASearch;
 /* 设置当前菜单项 */
 function setActiveNav(){
   var path = window.location.pathname;
@@ -228,4 +245,107 @@ function setContactIcons(){
   }else{
     container.className = 'contact-container';
   }
+}
+
+/* TODO 常用工具函数整理 */
+function createXHR(){
+  if (typeof XMLHttpRequest != "undefined"){
+    return new XMLHttpRequest();
+  } else if (typeof ActiveXObject != "undefined"){
+    if (typeof arguments.callee.activeXString != "string"){
+      var versions = [ "MSXML2.XMLHttp.6.0", "MSXML2.XMLHttp.3.0", "MSXML2.XMLHttp"], i, len;
+      for (i=0,len=versions.length; i < len; i++){
+        try {
+          new ActiveXObject(versions[i]);
+          arguments.callee.activeXString = versions[i];
+          break;
+        } catch (ex){
+        //跳过
+        }
+      }
+    }
+    return new ActiveXObject(arguments.callee.activeXString);
+  } else {
+    throw new Error("No XHR object available.");
+  }
+}
+
+function getSearchRes(keyword){
+  var xhr = createXHR();
+  xhr.onreadystatechange = function(){
+    if (xhr.readyState == 4){
+      if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+        //发送成功
+        setSearchRes(xhr.responseText,true);
+      } else {
+        //发送失败
+        setSearchRes(xhr.responseText,false);
+      }
+    }
+  };
+  xhr.open("get", "https://api.github.com/search/code?q=" + keyword + "+in:file+language:html+repo:ouhsub/ouhsub.github.io", true);
+  xhr.send();
+}
+
+function setSearchRes(data,done){
+  if(!done){
+
+  }else{
+    var container = document.getElementById('result_list');
+    data = JSON.parse(data).items;
+    for(var i=0; i<data.length; i++){
+      if(data[i].path.indexOf('_posts') >= 0){
+        var item = {};
+        item.path = data[i].path.replace('_posts/','').replace(/-/g,'/');
+        item.name = data[i].name.replace('.html','');
+        var namearr = item.name.split('-');
+        namearr.pop();
+        item.dates = namearr.join('-');
+        item.name = item.name.split('-')[3];
+
+        var list = document.createElement('li');
+        list.className = 'result-item';
+        var link = document.createElement('a');
+        var time = document.createElement('span');
+        link.href = '/' + item.path;
+        link.innerHTML = item.name;
+        time.innerHTML = item.dates;
+        list.appendChild(link);
+        list.appendChild(time);
+        result_list.innerHTML = '';
+        result_list.appendChild(list);
+      }
+    }
+  }
+}
+
+function showSearchPage(){
+  var page = document.getElementById('search_result_container');
+  page.className = 'search-result-container';
+  document.documentElement.scrollTop = 0;
+  window.pageYOffset = 0;
+  document.body.scrollTop = 0;
+  document.documentElement.style.overflow='hidden';//禁止滚动
+}
+
+function hideSearchPage(){
+  var page = document.getElementById('search_result_container');
+  page.className = 'search-result-container hidden';
+  document.documentElement.style.overflow='scroll';//回复滚动
+}
+
+function setSearchBtn(){
+  var val = search_input.value;
+  val = val.replace(/(^\s*)|(\s*$)/g, '');
+  if(val.length <= 0){
+    search_page_btn.disabled = true;
+  }else{
+    search_page_btn.disabled = false;
+  }
+}
+
+function makeASearch(){
+  var target = search_input.value;
+  target = target.replace(/(^\s*)|(\s*$)/g, '');
+  getSearchRes(target);
 }

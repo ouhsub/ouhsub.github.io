@@ -225,7 +225,7 @@ header>nav {
   .contact-container {
     display: none;
     position: fixed;
-    bottom: 50px;
+    bottom: 90px;
     right: 50px;
     margin: 0;
     width: 100%;
@@ -237,7 +237,7 @@ header>nav {
     position: fixed;
     width: 40px;
     height: 40px;
-    bottom: 50px;
+    bottom: 90px;
     right: 10px;
     cursor: pointer;
   }
@@ -261,6 +261,10 @@ header>nav {
 }
 .dismiss-icon {
   display: none;
+  float: right;
+  width: 30px;
+  height: 30px;
+  margin: 10px;
 }
 .category-container {
   margin-bottom: 20px;
@@ -273,10 +277,10 @@ header>nav {
     height: 40px;
   }
   .category-icon {
-    bottom: 130px;
+    bottom: 170px;
   }
   .tag-icon {
-    bottom: 90px;
+    bottom: 130px;
   }
   .category-container,
   .tag-container {
@@ -301,10 +305,6 @@ header>nav {
   }
   .dismiss-icon {
     display: block;
-    float: right;
-    width: 30px;
-    height: 30px;
-    margin: 10px;
   }
 }
 
@@ -600,5 +600,100 @@ header>nav {
     float: none;
     width: auto;
     height: auto;
+  }
+}
+
+
+/* search */
+.search-result-container {
+  position: absolute;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+}
+.search-result-container .dismiss-icon {
+  display: block;
+}
+.result-container {
+  margin: 0 auto;
+  max-width: 1000px;
+  height: 100%;
+}
+.search-page-input {
+  padding: 50px 0 30px;
+}
+.search-page-input input {
+  box-sizing: border-box;
+  width: 230px;
+  margin: 0 20px 0 0;
+  padding: 0 5px;
+  height: 30px;
+}
+.search-page-input button {
+  height: 30px;
+  margin: 0;
+  background-color: #fff;
+}
+.result-list {
+  padding-left: 250px;
+}
+.result-item {
+  margin-bottom: 10px;
+}
+.result-item a {
+  color: #666;
+  text-decoration: none;
+  font-size: 1.2em;
+  display: block;
+}
+.result-item span {
+  font-size: 0.8em;
+  color: #666;
+}
+.result-item a:hover {
+  color: #333;
+  text-decoration: underline;
+}
+.search-btn .widget-bg {
+  fill: #000;
+  stroke: #000;
+  opacity: 0;
+}
+.search-btn svg {
+  stroke: #333;
+}
+@media screen and (max-width: 767px) {
+  .search-page-input input {
+    width: 70%;
+    margin: 0;
+  }
+  .search-page-input button {
+    width: 25%;
+  }
+  .result-container {
+    padding: 0 5px;
+  }
+  .result-list {
+    padding-left: 0;
+  }
+  .nav-container .search-btn.widget {
+    display: block;
+    position: fixed;
+    bottom: 50px;
+    right: 10px;
+    padding: 0;
+    opacity: 0.5;
+    z-index: 4;
+  }
+  .search-btn svg {
+    fill: none;
+    stroke: #fff;
+    opacity: 0.5;
+  }
+  .search-btn .widget-bg {
+    opacity: 1;
   }
 }
