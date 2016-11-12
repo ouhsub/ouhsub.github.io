@@ -58,13 +58,17 @@ dismiss_search_btn.onclick = function(){
 };
 var search_input = document.getElementById('search_input');
 var search_page_btn = document.getElementById('search_page_btn');
+var search_form = document.getElementById('search_form');
 search_input.onblur = function(){
   setSearchBtn();
 };
 search_input.onkeyup = function(){
   setSearchBtn();
 };
-search_page_btn.onclick = makeASearch;
+search_form.onsubmit = function(e){
+  e.preventDefault();
+  makeASearch();
+}
 /* 设置当前菜单项 */
 function setActiveNav(){
   var path = window.location.pathname;
@@ -292,6 +296,7 @@ function setSearchRes(data,done){
 
   }else{
     var container = document.getElementById('result_list');
+    container.innerHTML = '';
     data = JSON.parse(data).items;
     for(var i=0; i<data.length; i++){
       if(data[i].path.indexOf('_posts') >= 0){
@@ -312,8 +317,7 @@ function setSearchRes(data,done){
         time.innerHTML = item.dates;
         list.appendChild(link);
         list.appendChild(time);
-        result_list.innerHTML = '';
-        result_list.appendChild(list);
+        container.appendChild(list);
       }
     }
   }
@@ -347,5 +351,9 @@ function setSearchBtn(){
 function makeASearch(){
   var target = search_input.value;
   target = target.replace(/(^\s*)|(\s*$)/g, '');
-  getSearchRes(target);
+  if(target.length === 0){
+    return false;
+  }else{
+    getSearchRes(target);
+  }
 }
