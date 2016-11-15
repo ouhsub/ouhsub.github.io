@@ -72,9 +72,13 @@ search_form.onsubmit = function(e){
 
 var wechat_btn = document.getElementById('wechat_btn');
 var dismiss_wechat = document.getElementById('dismiss_wechat');
+var wechat_container = document.getElementById('wechat_container');
 if(wechat_btn){
   wechat_btn.onclick = setWechat;
   dismiss_wechat.onclick = setWechat;
+  if(getStyle(document.getElementById('dismiss_wechat')).display != 'block'){
+    wechat_container.onclick = setWechat;
+  }
 }
 /* 设置当前菜单项 */
 function setActiveNav(){
@@ -370,7 +374,13 @@ function setWechat(){
   var wechat = document.getElementById('wechat_container');
   if(wechat.className === 'wechat-container hidden'){
     wechat.className = 'wechat-container';
+    if(getStyle(document.getElementById('dismiss_wechat')).display === 'block'){
+      document.documentElement.style.overflow='hidden';
+    }
   }else{
     wechat.className = 'wechat-container hidden';
+    if(getStyle(document.getElementById('dismiss_wechat')).display === 'block'){
+      document.documentElement.style.overflow='scroll';
+    }
   }
 }
