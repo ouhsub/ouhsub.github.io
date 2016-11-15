@@ -697,3 +697,31 @@ header>nav {
     opacity: 1;
   }
 }
+
+/* wechat */
+.wechat-container {
+  position: absolute;
+  width: 100%;
+  bottom: 160px;
+  z-index: 6;
+  text-align: center;
+}
+.wechat-container p,
+.wechat-container .dismiss-icon {
+  display: none;
+}
+@media screen and (max-width: 767px) {
+  .wechat-container {
+    height: 100%;
+    bottom: 0;
+    right: 0;
+    background-color: #fff;
+  }
+  .wechat-container .dismiss-icon {
+    display: block;
+  }
+  .wechat-container p {
+    margin-top: 100px;
+    display: block;
+  }
+}

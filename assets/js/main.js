@@ -68,6 +68,13 @@ search_input.onkeyup = function(){
 search_form.onsubmit = function(e){
   e.preventDefault();
   makeASearch();
+};
+
+var wechat_btn = document.getElementById('wechat_btn');
+var dismiss_wechat = document.getElementById('dismiss_wechat');
+if(wechat_btn){
+  wechat_btn.onclick = setWechat;
+  dismiss_wechat.onclick = setWechat;
 }
 /* 设置当前菜单项 */
 function setActiveNav(){
@@ -355,5 +362,15 @@ function makeASearch(){
     return false;
   }else{
     getSearchRes(target);
+  }
+}
+
+/* set weChat display */
+function setWechat(){
+  var wechat = document.getElementById('wechat_container');
+  if(wechat.className === 'wechat-container hidden'){
+    wechat.className = 'wechat-container';
+  }else{
+    wechat.className = 'wechat-container hidden';
   }
 }
