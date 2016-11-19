@@ -44,4 +44,35 @@
       {% endfor %}
     </div>
   </div>
+  {% if page.chapters != null %}
+  <svg class="siderbar-icon chapter-icon" id="chapter_icon" width="40" height="40">
+    <g transform="translate(20,20) scale(0.2,0.2)" opacity="0.5">
+      <g fill="#333" stroke="none">
+        <circle cx="-45" cy="-30" r="10" stroke="none"></circle>
+        <circle cx="-45" cy="0" r="10" stroke="none"></circle>
+        <circle cx="-45" cy="30" r="10" stroke="none"></circle>
+      </g>
+      <g stroke="#333" stroke-width="10" fill="none">
+        <line x1="-25" y1="-30" x2="55" y2="-30"></line>
+        <line x1="-25" y1="0" x2="55" y2="0"></line>
+        <line x1="-25" y1="30" x2="55" y2="30"></line>
+      </g>
+    </g>
+  </svg>
+  <div class="chapter-container" id="chapter_container">
+    <div class="dismiss-icon" id="dismiss_chapter">
+      <svg width="30" height="30" opacity="0.5">
+        <g transform="translate(15,15)">
+          <line x1="-10" x2="10" y1="0" y2="0" transform="rotate(45)" stroke="#333" stroke-width="4"></line>
+          <line x1="-10" x2="10" y1="0" y2="0" transform="rotate(-45)" stroke="#333" stroke-width="4"></line>
+        </g>
+      </svg>
+    </div>
+    <ul>
+      {% for chapter in page.chapters %}
+      <li class="chapter-item"><a href="#{{ chapter }}">{{ chapter }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 </div>

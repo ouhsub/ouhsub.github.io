@@ -24,6 +24,12 @@ var category_icon = document.getElementById('category_icon');
 var tag_icon = document.getElementById('tag_icon');
 var dismiss_category = document.getElementById('dismiss_category');
 var dismiss_tag = document.getElementById('dismiss_tag');
+var chapter_icon = document.getElementById('chapter_icon');
+var dismiss_chapter = document.getElementById('dismiss_chapter');
+var chapter_container = document.getElementById('chapter_container');
+if(chapter_container){
+  var chapter_item = chapter_container.getElementsByTagName('li');
+}
 if(category_icon){
   category_icon.onclick = function(){
     displayWidget('category');
@@ -39,6 +45,20 @@ if(tag_icon){
   dismiss_tag.onclick = function(){
     displayWidget('tag');
   };
+}
+if(chapter_icon){
+  chapter_icon.onclick = function(){
+    displayWidget('chapter');
+  };
+  dismiss_chapter.onclick = function(){
+    displayWidget('chapter');
+  };
+  var len = chapter_item.length;
+  for(var i=0; i<len; i++){
+    chapter_item[i].onclick = function(){
+      displayWidget('chapter');
+    };
+  }
 }
 
 var contact_btn = document.getElementById('contact_btn');

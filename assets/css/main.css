@@ -266,6 +266,7 @@ header>nav {
   height: 30px;
   margin: 10px;
 }
+.tag-container,
 .category-container {
   margin-bottom: 20px;
 }
@@ -276,12 +277,16 @@ header>nav {
     width: 40px;
     height: 40px;
   }
+  .chapter-icon {
+    bottom: 210px;
+  }
   .category-icon {
     bottom: 170px;
   }
   .tag-icon {
     bottom: 130px;
   }
+  .chapter-container,
   .category-container,
   .tag-container {
     display: none;
@@ -296,9 +301,7 @@ header>nav {
   .show {
     display: block;
   }
-  .category-container {
-    z-index: 11;
-  }
+  .chapter-container>ul,
   .category-container>ul,
   .tag-container>div:last-child {
     margin: 40px 20px;
@@ -725,4 +728,9 @@ header>nav {
     margin-top: 100px;
     display: block;
   }
+}
+
+/* blog style */
+.blog-title {
+  color: #666;
 }

@@ -11,7 +11,7 @@ title: 首页 | Ouhsub
       {% for category in site.categories %}
       {% if category[0] == 'blogs' %}
       {% assign pages_list = category[1] %}
-      {% for node in pages_list %}
+      {% for node in pages_list limit:10 %}
       <li class="article-item">
         <div class="article-title-container">
           <div>
