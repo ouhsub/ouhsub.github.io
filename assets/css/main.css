@@ -7,13 +7,31 @@ body {
   margin: 0;
   padding: 0;
   overflow-y: scroll;
+  color: #666;
 }
 ul,li{
   margin: 0;
   padding: 0;
   list-style: none;
 }
-
+h1 {
+  font-size: 1.4em;
+}
+h2 {
+  font-size: 1.3em;
+}
+h3 {
+  font-size: 1.2em;
+}
+h4 {
+  font-size: 1.1em;
+}
+h5 {
+  font-size: 1em;
+}
+h6 {
+  font-size: 0.9em;
+}
 /* 页面布局 */
 header {
   position: absolute;
@@ -312,6 +330,9 @@ header>nav {
 }
 
 /* article-list */
+.main-container{
+  padding: 0 5px;
+}
 .main-container a {
   color: #666;
   text-decoration: none;
@@ -373,9 +394,6 @@ header>nav {
   font-size: 1.2em;
 }
 @media screen and (max-width: 767px) {
-  .main-container{
-    padding: 0 5px;
-  }
   .main-title {
     width: 100%;
     text-align: left;
@@ -515,7 +533,7 @@ header>nav {
 }
 .profile-img {
   float: left;
-  width: 300px;
+  width: 400px;
   height: 300px;
 }
 .profile-text p {
@@ -733,4 +751,33 @@ header>nav {
 /* blog style */
 .blog-title {
   color: #666;
+  margin-bottom: 5px;
+}
+.blog-info p {
+  font-size: 0.8em;
+  margin: 0;
+}
+.blog-info .blog-excerpt {
+  margin: 10px 0;
+  font-size: 1em;
+  color: #666;
+}
+.blog-catalog ul {
+  padding-left: 20px;
+}
+.blog-catalog li {
+  list-style: circle;
+  font-size: 0.9em;
+}
+.blog-body {
+  color: #333;
+}
+.chapter-title {
+  font-size: 1.1em;
+}
+.chapter-item {
+  margin-bottom: 30px;
+}
+.blog-body h3 {
+  font-size: 1em;
 }

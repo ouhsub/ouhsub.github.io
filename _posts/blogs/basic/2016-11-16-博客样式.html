@@ -1,36 +1,142 @@
 ---
 layout: blog
-title: 博客样式
+title: 博客模板
 categories: blogs basic
-excerpt: 博客通用组件和样式
-tags: components
-chapters: [structure, style, sheet]
+excerpt: 博客通用组件和样式,摘要部分可以说是头部除标题外最重要的部分了。比如有这样一个议题，‘响应式布局’，摘要里可以这么些咯：（为什么要响应式布局？）阐释需求。（如何实现响应式布局？）核心方法是什么。（有什么特别需要注意的地方？）重点难点。
+tags: components HTML
+chapters: [结构, 部件, 样式]
+published: true
+script: prism.default.basic
+style: prism.default.basic
 ---
 
 {% include blog_head.html %}
-
-<h2 class="chapter-title">结构</h2>
-<div class="chapter-item">
-
-</div>
-
-<h2 class="chapter-title">部件</h2>
-<div class="chapter-item">
-  <h3>代码块</h3>
-  <pre>
-    <code>
-
-    </code>
-  </pre>
-</div>
-
-<h2 class="chapter-title">样式</h2>
-<div class="chapter-item">
-
-</div>
-
 <hr>
-<div class="aiticle-aside">
+<div class="blog-body">
+  <div class="chapter-item">
+    <a name="结构"></a>
+    <h2 class="chapter-title">结构</h2>
+    <article>
+      <p>
+        一篇博文整体结构上看一般分为头部，主体，结尾。<br>
+        头部主要是从整体上博客信息进行描述或种类划分：标题、日期、类目、标签、摘要、章节列表。<br>
+        主体部分就是分章节对文章主题进行阐述。<br>
+        有章节就按章节一步步分，章节里面细则用列表。<br>
+        结尾列出参考资料或其他相关信息。<br>
+      </p>
+      <p>
+        基本结构：
+        <pre><code class="language-markup">
+&lt;div class="blog-head"&gt;
+  &lt;h1 class="blog-title"&gt;
+    blog title
+  &lt;/h1&gt;
+  &lt;div class="blog-info"&gt;
+    blog info
+  &lt;/div&gt;
+  &lt;div class="blog-catalog"&gt;
+    blog catalog
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+&lt;div class="blog-body"&gt;
+  &lt;div class="chapter-item"&gt;
+    &lt;a name="chapter-title"&gt;&lt;a&gt;
+    &lt;h2 class="chapter-title"&gt;chapter-title&lt;/h2&gt;
+    &lt;article&gt;
+      章节内容
+    &lt;/article&gt;
+  &lt;/div&gt;
+  &lt;div class="chapter-item"&gt;
+    &lt;a name="chapter-title"&gt;&lt;a&gt;
+    &lt;h2 class="chapter-title"&gt;chapter-title&lt;/h2&gt;
+    &lt;article&gt;
+      章节内容
+    &lt;/article&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;hr&gt;
+
+&lt;div class="blog-foot"&gt;
+  &lt;h3&gt;相关文章&lt;/h3&gt;
+  &lt;p class="link-item"&gt;
+    &lt;a href=""&gt;sone link&lt;/a&gt;
+  &lt;/p&gt;
+  &lt;h3&gt;参考资料&lt;/h3&gt;
+  &lt;p class="link-item"&gt;
+    &lt;a href=""&gt;sone link&lt;/a&gt;
+  &lt;/p&gt;
+&lt;/div&gt;
+        </code></pre>
+      </p>
+    </article>
+  </div>
+
+  <div class="chapter-item">
+    <a name="部件"></a>
+    <h2 class="chapter-title">部件</h2>
+    <article>
+      <ul>
+        <li>
+          <h3>代码块</h3>
+          <p>这里是一段js代码</p>
+          <pre><code class="language-js">
+/* JavaScript code */
+var foo = 'bar';
+function getFoo(){
+  console.log(foo);
+  return;
+}
+          </code></pre>
+          <p>这里是一段css代码</p>
+          <pre><code class="language-css">
+/* stylesheet code */
+body {
+  color: #333;
+  padding: 0;
+  margin: 10px;
+  overflow: auto;
+}
+          </code></pre>
+          <p>这里写一段HTML代码</p>
+          <pre><code class="language-markup">
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;
+      This is a Header.
+    &lt;/h1&gt;
+  &lt;/header&gt;
+&lt;/body&gt;
+          </code></pre>
+        </li>
+      </ul>
+    </article>
+  </div>
+
+  <div class="chapter-item">
+    <a name="样式"></a>
+    <h2 class="chapter-title">样式</h2>
+    <article>
+      <ul>
+        <li>
+          颜色：
+          #333 <span style="display:inline-block;width: 0.8em;height: 0.8em;border-radius: 50%;line-height: 1em; background-color: #333;"></span>,
+          #666 <span style="display:inline-block;width: 0.8em;height: 0.8em;border-radius: 50%;line-height: 1em; background-color: #666;"></span>
+         </li>
+      </ul>
+    </article>
+  </div>
+</div>
+<hr>
+<div class="blog-foot">
+  <h3>相关文章</h3>
+  <p class="link-item">
+    <a href="">组件化网页构建</a>
+    <a href="https://github.com">github</a>
+  </p>
   <h3>参考资料</h3>
   <p class="link-item">
     <a href="https://github.com">github</a>
