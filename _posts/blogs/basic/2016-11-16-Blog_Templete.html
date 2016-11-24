@@ -3,7 +3,7 @@ layout: blog
 title: 博客模板
 categories: blogs basic
 excerpt: 博客通用组件和样式,摘要部分可以说是头部除标题外最重要的部分了。比如有这样一个议题，‘响应式布局’，摘要里可以这么些咯：（为什么要响应式布局？）阐释需求。（如何实现响应式布局？）核心方法是什么。（有什么特别需要注意的地方？）重点难点。
-tags: components HTML
+tags: templete structure
 chapters: [结构, 部件, 样式]
 published: true
 script: prism.default.basic
@@ -111,6 +111,34 @@ body {
   &lt;/header&gt;
 &lt;/body&gt;
           </code></pre>
+        </li>
+        <li>
+          <h3>目录结构</h3>
+          <ul class="dir-container">
+            <li>
+              blog
+              <span class="open-trigger">-</span>
+              <ul class="dir-container">
+                <li>_config.yml</li>
+                <li>index.html</li>
+              </ul>
+            </li>
+            <li>
+              _post
+              <span class="open-trigger">-</span>
+              <ul class="dir-container">
+                <li>config.json</li>
+                <li>
+                  server
+                  <span class="open-trigger">-</span>
+                  <ul class="dir-container">
+                    <li>app.js</li>
+                    <li>index.jade</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </li>
       </ul>
     </article>

@@ -9,9 +9,11 @@ body {
   overflow-y: scroll;
   color: #666;
 }
-ul,li{
+ul,li {
   margin: 0;
   padding: 0;
+}
+ul {
   list-style: none;
 }
 h1 {
@@ -780,4 +782,23 @@ header>nav {
 }
 .blog-body h3 {
   font-size: 1em;
+}
+
+/* directory-component */
+.dir-container {
+  margin: 0 0 5px 20px;
+  border-left: 2px dashed #333;
+  padding-left: 10px;
+}
+.open-trigger {
+  cursor: pointer;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  text-align: center;
+}
+@media screen and (max-width: 767px) {
+  ol {
+    padding: 0;
+  }
 }

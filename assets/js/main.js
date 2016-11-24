@@ -404,3 +404,27 @@ function setWechat(){
     }
   }
 }
+
+var triggers = document.getElementsByClassName('open-trigger');
+if(triggers){
+  var i=0, len=triggers.length;
+  for(i=0; i<len; i++){
+    (function(n){
+      triggers[n].onclick = function(){
+        setDirectoryItem(triggers[n]);
+      }
+    })(i)
+  }
+}
+/* directory structure component */
+function setDirectoryItem(trigger){
+  var status = trigger.innerHTML==='-' ? 0 : 1;
+  if(status){
+    trigger.parentNode.getElementsByClassName('dir-container')[0].className = 'dir-container';
+    trigger.innerHTML = '-';
+  }else{
+    trigger.parentNode.getElementsByClassName('dir-container')[0].className = 'dir-container hidden';
+    trigger.innerHTML = '+';
+  }
+  setFooter();
+}
