@@ -4,7 +4,7 @@ title: Jekyll详解
 categories: blogs basic
 excerpt: Jekyll是一个静态站点生成器，我是在搭建Github Pages博客的时候开始接触它，还挺好用。使用方法非常简单，这里详细介绍一下。
 tags: Jekyll Liquid YAML
-chapters: [配置安装, 命令, 目录结构, 配置, 头信息, 草稿, 变量, 数据文件, assets, 模板, 永久链接, 插件, 分页]
+chapters: [配置安装, 命令, 目录结构, 配置, 头信息, 写文章, 变量, 数据文件, 模板, 永久链接, 插件, 分页]
 published: true
 script: prism.default.basic
 style: prism.default.basic
@@ -437,7 +437,6 @@ kramdown:
         </li>
         <li>
           <h3>Markdown选项</h3>
-
         </li>
       </ol>
     </article>
@@ -446,11 +445,614 @@ kramdown:
     <a name="头信息"></a>
     <h2 class="chapter-title">头信息</h2>
     <article>
+      <p>
+        任何只要包含YAML头信息的文件在Jekyll中都能被当做一个特殊的文件来处理。
+        头信息必须在文件的开始部分，并且需要按照 YAML 的格式写在两行三虚线之间。
+        在这两行的三虚线之间，可以设置一些预定义的变量或者自定义的变量。
+        这样在接下来的文件和任意模板中或者在包含这些页面或博客的模板中都
+        可以通过使用Liquid标签来访问这些变量。
+      </p>
+      <ol>
+        <li>
+          预定义全局变量
+          <p>
+            <strong>layout</strong><br>
+            用于指定模板文件，不需要扩展名。模板文件需要放在 _layouts 目录下。
+          </p>
+          <p>
+            <strong>permalink</strong><br>
+            博客默认的URL地址为/year/month/day/title.html，
+            这个变量用于改变博客的默认URL，设置变量后，成为最终的URL地址。
+          </p>
+          <p>
+            <strong>published</strong><br>
+            当站点生成的时候，如果不需要展示一个具体的博文，可以设置这个变量为 false。
+          </p>
+        </li>
+        <li>
+          预定义文章变量
+          <p>
+            <strong>category/categories</strong><br>
+            除过将博客文章放在某个文件夹下面外，还可以根据文章的类别来给他们设置一个或者多个分类属性。
+            博客生成的时候这些文章就可以根据这些分类来阅读。
+            在一个文章中多个类别可以通过YAML list来指定，或者用空格隔开。
+          </p>
+          <p>
+            <strong>tags</strong><br>
+            类似分类，一篇文章也可以给它增加一个或者多个标签。
+            同样多个标签之间可以通过YAML list或者空格隔开。
+          </p>
+          <p>
+            <strong>date</strong><br>
+            这里的日期会覆盖文章名字中的日期。这样就可以用来确定文章分类的正确。
+            格式(YYYY-MM-DD HH:MM:SS +/-TTTT)其中小时，分钟，秒钟与时区偏移量是可选的。
+          </p>
+        </li>
+        <li>
+          自定义变量
+          <p>在头信息中没有预先定义的任何变量都会在数据转换中通过Liquid模板被调用</p>
+        </li>
+      </ol>
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="写文章"></a>
+    <h2 class="chapter-title">写文章</h2>
+    <article>
+      <ol>
+        <li>
+          创建文章
+          <p>
+            在_posts文件夹下创建以格式YEAR-MONTH-DAY-title.MARKUP命名的文件即可。
+            所有博客文章顶部必须有一段YAML头信息。在它下面，就可以选择喜欢的格式来写文章了。
+          </p>
+        </li>
+        <li>
+          引用静态资源
+          <p>
+            需要在文章中引用图片、下载或其它静态文件资源的时候，
+            只需要关心在站点的哪些地方保存这些文件就可以咯。<br>
+            一种常用做法是在工程的根目录下创建一个文件夹(assets)，将静态资源放到这个文件夹下。
+            然后在任何一篇文章中，它们都可以用站点的根目录来进行引用。
+            这和你站点的域名/二级域名和目录的设置相关，可以利用site.url变量来解决这个问题。<br>
+            <code class="language-markup">
+              &lt;link rel="stylesheet" href="{% raw %}{{ site.url }}{% endraw %}/assets/css/main.css"&gt;
+            </code>
+          </p>
+        </li>
+        <li>
+          Assets
+          <p>
+            Jekyll提供了对Sass的内置支持，并且可以通过一个Ruby gem与CoffeeScript协调工作。
+            要使用这两种格式的文件，首先必须使用正确的扩展名(.sass, .scss, .coffee)，
+            并且每个文件都要以两行三个短横线开始，比如: <pre><code class="language-sass">/* some.sass */
+---
+---
+// start content
+.my-definition
+  font-size: 1.2em</code></pre>
+            Jekyll像对待常规文件一样对待这些文件，输出文件将被放在同一个文件夹。
+            比如在source文件夹中有一个css/styles.scss文件，
+            Jekyll将会编译它并将它放在destination文件夹下css/styles.css。
+          </p>
+          <p>
+            <strong>Sass/SCSS</strong><sup><a href="#ref_1">1</a></sup><br>
+            Jekyll允许定制Sass转换方式。将所有片段/组件放在sass_dir(默认为source/_sass)，
+            将主SCSS/Sass文件放在输出文件夹中(如source/css)。
+            Sass转换器默认将sass_dir设置为_sass。
+            如果要使用Sass的@import声明，需要确保将sass_dir设置于包含着Sass文件的网站根目录，可以这样:
+            <pre><code class="language-yaml"># _config.yml
+sass:
+  sass_dir: _sass</code></pre>
+            sass_dir目录只是Sass import操作的加载路径，除此再也没别的了。
+            这意味着Jekyll并不直接处理这个文件夹中的文件，所以也就没必要包含YAML头信息了。<br>
+            也可以指定Sass文件的编译格式: <pre><code class="language-yaml"># _config.yaml
+sass:
+  style: compressed</code></pre>可以通过这些设置传递编译参数到Sass。
+          </p>
+          <p>
+            <strong>CoffeeScript</strong><br>
+            要想在Jekyll3.0+中使用CoffeeScript，必须下载jekyll-coffeescript的gem包。
+            确保更新配置文件，并且包含以下配置:<pre><code class="language-yaml"># _config.yaml
+gems:
+ - jekyll-coffeescript</code></pre>
+          </p>
+        </li>
+        <li>
+          文章索引
+          <p>
+            使用<a href="https://shopify.github.io/liquid/" target="_blank">Liquid模版语言</a>和它的标记可以轻松地创建文章列表:
+            <pre><code class="language-markup">&lt;ul&gt;
+  {% raw %}{% for post in site.posts %}{% endraw %}
+    &lt;li&gt;
+      &lt;a href="{% raw %}{{ post.url }}{% endraw %}"&gt;{% raw %}{{ post.title }}{% endraw %}&lt;/a&gt;
+    &lt;/li&gt;
+  {% raw %}{% endfor %}{% endraw %}
+&lt;/ul&gt;</code></pre>
+          </p>
+        </li>
+        <li>
+          文章摘要
+          <p>
+            Jekyll会自动取每篇文章从开头到第一次出现excerpt_separator的地方作为文章的摘要，
+            并将此内容保存到变量post.excerpt中。可以这样输出:
+            <pre><code class="language-markup">&lt;ul&gt;
+  {% raw %}{% for post in site.posts %}{% endraw %}
+    &lt;li&gt;
+      &lt;a href="{% raw %}{{ post.url }}{% endraw %}"&gt;{% raw %}{{ post.title }}{% endraw %}&lt;/a&gt;
+      {% raw %}{{ post.excerpt }}{% endraw %}
+    &lt;/li&gt;
+  {% raw %}{% endfor %}{% endraw %}
+&lt;/ul&gt;</code></pre>Jekyll会将自动生成的摘要内容包含在段落标签内。可以这样去掉这些p标签: <br>
+            <code class="language-markup">{% raw %}{{ post.excerpt | remove: '&lt;p&gt;' | remove: '&lt;/p&gt;' }}{% endraw %}</code>
+          </p>
+          <p>
+            如果不喜欢自动生成的文章摘要，也可以在YAML头信息中显示地定义excerpt变量来覆盖自动生成的摘要。
+          </p>
+          <p>
+            可以在_config.yml配置文件中设定全局的excerpt_separator，
+            或者在文章YAML信息头中设定excerpt_separator:
+            <pre><code class="language-markup">---
+excerpt_separator: &lt;!--more--&gt;
+---
+
+Excerpt
+&lt;!--more--&gt;
+Out-of-excerpt</code></pre>
+            要完全禁用摘要，可以将excerpt_separator设定为""。
+          </p>
+          <p>
+            在输出文章摘要的时候可以向output标记传递 | strip_html 过滤器，用来移除所有的HTML标签。
+            这在要将摘要输出作为meta元数据的时候是很有用滴。
+          </p>
+        </li>
+        <li>
+          代码高亮
+          <p>
+            Jekyll 自带语法高亮功能，是由 Pygments 来实现的。
+            在文章中插入一段高亮代码非常简单，只需使用下面的 Liquid 标记:
+            <pre><code class="language-markup">{% raw %}{% highlight ruby %}{% endraw %}
+def show
+  @widget = Widget(params[:id])
+  respond_to do |format|
+    format.html # show.html.erb
+    format.json { render json: @widget }
+  end
+end
+{% raw %}{% endhighlight %}{% endraw %}</code></pre>
+          </p>
+        </li>
+        <li>
+          使用草稿
+          <p>
+            草稿是没有日期的文章。是还在创作中而暂时不想发表的文章。
+            所有保存在_drafts/文件夹中的文章都是草稿。<br>
+            要预览草稿可以运行<code class="language-bash"> jekyll serve --drafts </code>
+            或者在配置文件中设置<code class="language-yaml"> show_drafts: true </code>
+            此两种方法皆会将 Time.now 的值赋予草稿文章，作为其发布日期，
+            草稿文章作为最新文章被生成。
+          </p>
+        </li>
+        <li>
+          静态页面
+          <p>
+            作为写文章的补充，Jekyll 还可以创建静态页面。
+            站点上任何 HTML 文件，包括主页，都可以使用布局和 include 中的内容一般共用的内容，
+            如页面的 header 和 footer. 将合适的部分抽出放到布局中。有两种创建静态页面的方式:
+            <ul>
+              <li>
+                命名HTML文件
+                <p>
+                  增加一个新页面的最简单方法就是把给 HTML 文件起一个适当的名字并放在根目录下。
+                  一般来说，一个站点下通常会有：主页 (homepage), 关于 (about), 和一个联系 (contact)页。
+                  根目录下的文件结构和对应生成的URL:
+                  <ul class="dir-container">
+                    <li>index.html    # => https://example.com/</li>
+                    <li>about.html    # => https://example.com/about.html</li>
+                    <li>contact.html    # => https://example.com/contact.html</li>
+                  </ul>
+                </p>
+              </li>
+              <li>
+                命名一个文件夹并包含一个index.html文件
+                <p>
+                  如果不喜欢在 URL 中显示文件的扩展名。
+                  只需要为每个顶级页面创建一个文件夹，并包含一个 inex.html 文件:
+                  <ul class="dir-container">
+                    <li>index.html    # => http://example.com/</li>
+                    <li>
+                      about
+                      <span class="open-trigger">-</span>
+                      <ul class="dir-container">index.html    # => https://example.com/about.html</ul>
+                    </li>
+                    <li>
+                      contact
+                      <span class="open-trigger">-</span>
+                      <ul class="dir-container">index.html    # => https://example.com/contact.html</ul>
+                    </li>
+                  </ul>
+                </p>
+              </li>
+            </ul>
+          </p>
+        </li>
+      </ol>
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="变量"></a>
+    <h2 class="chapter-title">变量</h2>
+    <article>
+      Jekyll 会遍历网站搜寻要处理的文件。
+      任何有 YAML 头信息的文件都是要处理的对象。
+      对于每一个这样的文件，Jekyll都会通过Liquid模板工具来生成一系列的数据。
+      <ol>
+        <li>
+          全局变量
+          <p>
+            <strong>site</strong><br>
+            来自_config.yml文件的全站范围的信息+配置
+          </p>
+          <p>
+            <strong>page</strong><br>
+            页面专属的信息+YAML头文件信息。通过YAML头文件自定义的信息都可以在这里被获取。
+          </p>
+          <p>
+            <strong>content</strong><br>
+            被layout包裹的那些 Post 或者 Page 渲染生成的内容。
+            没有定义在 Post 或者 Page 文件中。
+          </p>
+          <p>
+            <strong>paginator</strong><br>
+            每当 paginate 配置选项被设置了的时候，这个变量就可用了。
+          </p>
+        </li>
+        <li>
+          全站(site)变量
+          <p>
+            <strong>site.time</strong><br>
+            当前时间。
+          </p>
+          <p>
+            <strong>site.pages</strong><br>
+            所有pages的列表。
+          </p>
+          <p>
+            <strong>site.posts</strong><br>
+            一个按照时间倒叙的所有 Posts 的列表。
+          </p>
+          <p>
+            <strong>site.related_posts</strong><br>
+            如果当前被处理的页面是一个 Post，这个变量就会包含最多10个相关的 Post。
+            默认的情况下， 相关性是低质量的，但是能被很快的计算出来。
+            如果你需要高相关性，就要消耗更多的时间来计算。
+            用jekyll命令带上--lsi选项来计算高相关性的 Post。Github Pages不支持--lsi选项的命令啊。
+          </p>
+          <p>
+            <strong>site.static_files</strong><br>
+            所有静态文件的列表，每个文件有三个属性(路径、修改时间、扩展名)
+          </p>
+          <p>
+            <strong>site.html_pages</strong><br>
+            site.pages的子集，列出.html结尾的文件。
+          </p>
+          <p>
+            <strong>site.html_files</strong><br>
+            site.static_files的子集，列出.html结尾的文件。
+          </p>
+          <p>
+            <strong>site.collections</strong><br>
+            所有集合的列表。
+          </p>
+          <p>
+            <strong>site.data</strong><br>
+            包含所有从_data目录下的YAML文件载入的数据的列表。
+          </p>
+          <p>
+            <strong>site.documents</strong><br>
+            每个集合中的文档的列表
+          </p>
+          <p>
+            <strong>site.categories.CATEGORY</strong><br>
+            类目名为CATEGORY的所有文章。
+          </p>
+          <p>
+            <strong>site.tags.TAG</strong><br>
+            所有的在 TAG 标签下的文章。
+          </p>
+          <p>
+            <strong>site.[CONFIGURATION_DATA]</strong><br>
+            所有的通过命令行和 _config.yml 设置的变量都会存到这个 site 里面。
+            举例来说，如果在配置文件中设置了<code class="language-yaml"> url: http://mysite.com </code>，
+            那么在Posts和Pages里面，这个变量就被存储在了site.url中。<br>
+            Jekyll不会把对_config.yml做的改动放到watch模式，
+            所以要重启Jekyll来让对配置文件的改动生效。
+          </p>
+        </li>
+        <li>
+          页面(page)变量
+          <p>
+            任何你自定义的头文件信息都会在page中可用。<br>
+            如果在layout中定义了变量，需要通过layout获取。
+          </p>
+          <p>
+            <strong>page.content</strong><br>
+            页面内容的源码。
+          </p>
+          <p>
+            <strong>page.title</strong><br>
+            页面标题。
+          </p>
+          <p>
+            <strong>page.excerpt</strong><br>
+            文章的摘要。
+          </p>
+          <p>
+            <strong>page.url</strong><br>
+            文章以斜线打头的相对路径。
+          </p>
+          <p>
+            <strong>page.date</strong><br>
+            文章的日期，可以在头文件信息中重写，格式为YYYY-MM-DD HH:MM:SS (assuming UTC)，
+            或者YYYY-MM-DD HH:MM:SS +/-TTTT。
+          </p>
+          <p>
+            <strong>page.id</strong><br>
+            每篇文章的唯一标识符(在RSS中比较有用)。
+          </p>
+          <p>
+            <strong>page.categories</strong><br>
+            文章所属的类目的列表。类目既可以在文章的YAML头信息中定义，
+            也可以从文章的所属的目录结构中提取。
+            如一个路径为/work/code/_posts/2008-12-24-closures.md的文章，
+            它的类目就是['work','code']。
+          </p>
+          <p>
+            <strong>page.tags</strong><br>
+            文章所属的所有tags，在YAML头文件信息中定义。
+          </p>
+          <p>
+            <strong>page.path</strong><br>
+            一个文章的源文件地址。比如要链接到Github上某文章的源文件。可以在YAML头文件中重写。
+          </p>
+          <p>
+            <strong>page.next</strong><br>
+            与当前文章相对的下一篇文章。
+          </p>
+          <p>
+            <strong>page.previous</strong><br>
+            与当前文章相对的上一篇文章。
+          </p>
+        </li>
+        <li>
+          分页器(Paginator)变量
+          <p>
+            <strong>paginator.per_page</strong><br>
+            每一页posts的数量
+          </p>
+          <p>
+            <strong>paginator.posts</strong><br>
+            当前页可用的posts
+          </p>
+          <p>
+            <strong>paginator.total_posts</strong><br>
+            posts的总数
+          </p>
+          <p>
+            <strong>paginator.total_pages</strong><br>
+            pages的总数
+          </p>
+          <p>
+            <strong>paginator.page</strong><br>
+            当前页号
+          </p>
+          <p>
+            <strong>paginator.previous_page</strong><br>
+            上一页页号
+          </p>
+          <p>
+            <strong>paginator.previous_page_path</strong><br>
+            上一页地址
+          </p>
+          <p>
+            <strong>paginator.next_page</strong><br>
+            下一页页号
+          </p>
+          <p>
+            <strong>paginator.next_page_path</strong><br>
+            下一页地址
+          </p>
+        </li>
+      </ol>
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="数据文件"></a>
+    <h2 class="chapter-title">数据文件</h2>
+    <article>
+      <p>
+        Jekyll支持从_data文件夹下的YAML文件，JSON文件或CSV文件(必须包含一个首部行)中加载数据。
+        这一特性可以避免模板中的重复，并且可以不改变_config.yml文件的情况下改变站点配置。
+        插件/主题也可以利用数据文件来设置配置变量。
+      </p>
+      <ol>
+        例子:
+        <li>
+          成员列表
+          <pre><code class="language-yaml">#  _data/members.yml:
+- name: Eric Mill
+  github: konklone
+
+- name: Parker Moore
+  github: parkr
+
+- name: Liu Fengyun
+  github: liufengyun</code></pre>
+          这些数据可以通过site.data.members获取(文件名决定变量名)。
+          然后可以在模板中渲染成员列表数据咯:
+          <pre><code class="language-markup">&lt;ul&gt;
+{% raw %}{% for member in site.data.members %}{% endraw %}
+  &lt;li&gt;
+    &lt;a href="https://github.com/{% raw %}{{ member.github }}{% endraw %}"&gt;
+      {% raw %}{{ member.name }}{% endraw %}
+    &lt;/a&gt;
+  &lt;/li&gt;
+{% raw %}{% endfor %}{% endraw %}
+&lt;/ul&gt;</code></pre>
+        </li>
+        <li>
+          组织机构
+          <p>
+            数据文件可以放置在_data文件夹下的子文件夹中，每一层的文件夹都会被添加到变量的命名空间。
+            这里每个Github组织的信息都分别放在了orgs文件夹下的数据文件中。
+          </p>
+          <pre><code class="language-yaml">#  _data/orgs/jekyll.yml
+username: jekyll
+name: Jekyll
+members:
+  - name: Tom Preston-Werner
+    github: mojombo
+
+  - name: Parker Moore
+    github: parkr</code></pre>
+          <pre><code class="language-yaml">#  _data/orgs/doeorg.yml
+username: doeorg
+name: Doe Org
+members:
+  - name: John Doe
+    github: jdoe</code></pre>
+          这些数据可以通过site.data.orgs获取。
+          然后可以在模板中渲染组织列表数据:
+          <pre><code class="language-markup">&lt;ul&gt;
+{% raw %}{% for org_hash in site.data.orgs %}{% endraw %}
+{% raw %}{% assign org = org_hash[1] %}{% endraw %}
+  &lt;li&gt;
+    &lt;a href="https://github.com/{{ org.username }}"&gt;
+      {% raw %}{{ org.name }}{% endraw %}
+    &lt;/a&gt;
+    ({% raw %}{{ org.members | size }}{% endraw %} members)
+  &lt;/li&gt;
+{% raw %}{% endfor %}{% endraw %}
+&lt;/ul&gt;</code></pre>
+        </li>
+        <li>
+          获取特定作者数据
+          <p>
+            pages和posts也可以获取一个特定的数据值。
+          </p>
+          <pre><code class="language-yaml">#  _data/people.yml
+dave:
+    name: David Smith
+    twitter: DavidSilvaSmith</code></pre>
+    <pre><code class="language-markup">---
+title: sample post
+author: dave
+---
+
+{% raw %}{% assign author = site.data.people[page.author] %}{% endraw %}
+&lt;a rel="author"
+  href="https://twitter.com/{% raw %}{{ author.twitter }}{% endraw %}"
+  title="{% raw %}{{ author.name }}{% endraw %}"&gt;
+    {% raw %}{{ author.name }}{% endraw %}
+&lt;/a&gt;
+</code></pre>
+        </li>
+      </ol>
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="集合"></a>
+    <h2 class="chapter-title">集合</h2>
+    <article>
+
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="模板"></a>
+    <h2 class="chapter-title">模板</h2>
+    <article>
+      Jekyll 使用 Liquid模板语言，支持所有标准的 Liquid 标签 和 过滤器 。
+      Jekyll 甚至增加了几个过滤器和标签，方便使用。
+      <ol>
+        <li>
+          过滤器
+          <p>
+            <code class="language-markup">{% raw %}{{ "/assets/style.css" | relative_url }}{% endraw %}</code><br>
+            => /my-baseurl/assets/style.css <br>
+            Relative URL
+          </p>
+          <p>
+            <code class="language-markup">{% raw %}{{ site.time | date_to_xmlschema }}{% endraw %}</code><br>
+            => 2008-11-17T13:07:54-08:00 <br>
+            日期转化为 XML 模式(ISO 8601)
+          </p>
+          <p>
+            <code class="language-markup">{% raw %}{{ site.time | date_to_rfc822 }}{% endraw %}</code><br>
+            => Mon, 17 Nov 2008 13:07:54 -0800 <br>
+            日期转化为 RFC-822 格式，用于 RSS 订阅
+          </p>
+          <p>
+            <code class="language-markup">{% raw %}{{ site.time | date_to_string }}{% endraw %}</code><br>
+            => 17 Nov 2008 <br>
+            日期转化为短格式
+          </p>
+          <p>
+            <code class="language-markup">{% raw %}{{ site.time | date_to_long_string }}{% endraw %}</code><br>
+            => 17 November 2008 <br>
+            日期转化为长格式
+          </p>
+          <p>
+            <code class="language-markup">{% raw %}{{ page.content | xml_escape }}{% endraw %}</code><br>
+            XML 转码
+          </p>
+        </li>
+        <li>
+          标签
+        </li>
+      </ol>
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="永久链接"></a>
+    <h2 class="chapter-title">永久链接</h2>
+    <article>
+
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="分页"></a>
+    <h2 class="chapter-title">分页</h2>
+    <article>
+
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="插件"></a>
+    <h2 class="chapter-title">插件</h2>
+    <article>
+
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="主题"></a>
+    <h2 class="chapter-title">主题</h2>
+    <article>
+
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="部署"></a>
+    <h2 class="chapter-title">部署</h2>
+    <article>
 
     </article>
   </div>
 </div>
 <hr>
 <div class="blog-foot">
-
+  <h3>参考资料</h3>
+  <p class="link-item">
+    <a name="ref_1">1、</a>
+    <a href="https://github.com/jekyll/jekyll-sass-converter/tree/master/example" target="_blank">Jekyll Sass Converter Example</a>
+  </p>
 </div>
