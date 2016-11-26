@@ -96,6 +96,8 @@
 </footer>
 
 <script src="/assets/js/main.js"></script>
-{% if page.script != null %}
-<script src="/assets/js/{{ page.script }}.js"></script>
+{% if page.scripts != null %}
+{% for script in page.scripts %}
+<script src="/assets/js/{{ script }}.js"></script>
+{% endfor %}
 {% endif %}

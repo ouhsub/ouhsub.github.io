@@ -331,6 +331,7 @@ function setSearchRes(data,done){
     container.innerHTML = '';
     data = JSON.parse(data).items;
     for(var i=0; i<data.length; i++){
+      console.log(data[i]);
       if(data[i].path.indexOf('_posts') >= 0){
         var item = {};
         item.path = data[i].path.replace('_posts/','').replace(/-/g,'/');
