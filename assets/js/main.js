@@ -209,8 +209,9 @@ function setGotopWidget(){
 /* 滚动到顶部 */
 function scrollToTop(){
   var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+  var step = scrollTop < 500 ? 10 : Math.floor(scrollTop/100);
   function goTop(){
-    scrollTop -= 10;
+    scrollTop -= step;
     scrollTop = scrollTop<0 ? 0 : scrollTop;
     document.documentElement.scrollTop = scrollTop;
     window.pageYOffset = scrollTop;

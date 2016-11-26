@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+{% include head.html %}
+<body>
+  {% include header.html %}
+  <main>
+    <div class="main-container">
+      <article class="article-container">
+        <div>
+          {% for cate in site.categories %}
+          {% if cate[0] == page.type %}
+          <ul data-type="{{ cate[0] }}">
+            <h1 class="kind-title">{{ cate[0] }}</h1>
+            {% assign pages_list = cate[1] %}
+            {% for node in pages_list %}
+            <li class="kind-item">
+              <a href="{{ BASE_PATH }}{{node.url}}">
+                <h2>{{ node.title }}</h2>
+                <p>{{ node.excerpt }}</p>
+              </a>
+              <span>{{ node.date | date_to_string }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </article>
+      {% include siderbar.html %}
+      {% include gotop.html %}
+    </div>
+  </main>
+  {% include footer.html %}
+</body>
+</html>

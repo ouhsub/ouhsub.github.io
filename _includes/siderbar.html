@@ -18,8 +18,8 @@
     </div>
     <ul>
       {% for cate in site.categories %}
-      {% if cate[0] != 'blogs' and cate[0] != 'projects' %}
-      <li class="category-item"><a href="{{ BASE_PATH }}/category/?target={{ cate[0] }}">{{ cate[0] }}</a></li>
+      {% if cate[0] != 'blog' %}
+      <li class="category-item"><a href="{{ BASE_PATH }}/blog/{{ cate[0] }}">{{ cate[0] }}</a></li>
       {% endif %}
       {% endfor %}
     </ul>

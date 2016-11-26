@@ -3,34 +3,24 @@ layout: default
 title:  作品 | Ouhsub
 ---
 
-{% include timeline.html %}
 <div class="main-container">
   <h1 class="main-title">作品列表</h1>
   <ul>
-    {% for category in site.categories %}
-    {% if category[0] == 'projects' %}
-    {% assign pages_list = category[1] %}
-    {% for node in pages_list %}
+    {% for project in site.data.projects %}
     <li class="project-item">
       <div class="project-info-container">
-        <a href="{{ BASE_PATH }}{{ node.url }}">
-          <h2>{{ node.title }}</h2>
-          <p>{{ node.excerpt }}</p>
+        <a href="{{ project.url }}">
+          <h2>{{ project.name }}</h2>
+          <p>{{ project.excerpt }}</p>
         </a>
-        {% for tag in node.tags %}
-        <a class="project-tags-container" href="{{ BASE_PATH }}/tag/?target={{ tag }}">
-          <span>{{ tag }}</span>
-        </a>
-        {% endfor %}
+        <a href="{{ project.path }}">项目源码</a>
       </div>
       <div class="project-img-container">
-        <a href="{{ BASE_PATH }}{{ node.url }}">
-          <img src="/assets/img/project/{{ node.img }}" alt="{{ node.title }}">
+        <a href="{{ project.url }}">
+          <img src="/assets/img/project/{{ project.url }}.svg" alt="{{ project.name }}">
         </a>
       </div>
     </li>
-    {% endfor %}
-    {% endif %}
     {% endfor %}
   </ul>
 </div>

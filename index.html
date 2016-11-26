@@ -3,13 +3,12 @@ layout: default
 title: 首页 | Ouhsub
 ---
 
-{% include timeline.html %}
 <div class="main-container">
   <h1 class="main-title">最新文章</h1>
   <div>
     <ul>
       {% for category in site.categories %}
-      {% if category[0] == 'blogs' %}
+      {% if category[0] == 'blog' %}
       {% assign pages_list = category[1] %}
       {% for node in pages_list limit:10 %}
       <li class="article-item">
@@ -25,8 +24,8 @@ title: 首页 | Ouhsub
           <p>{{ node.date | date_to_string }}</p>
           <p>
             {% for cate in node.categories %}
-            {% if cate != 'blogs' %}
-            <a href="{{ BASE_PATH }}/category/?target={{ cate }}">{{ cate }}</a>
+            {% if cate != 'blog' %}
+            <a href="{{ BASE_PATH }}/blog/{{ cate }}">{{ cate }}</a>
             {% endif %}
             {% endfor %}
           </p>
