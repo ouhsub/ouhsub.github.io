@@ -227,22 +227,25 @@ function scrollToTop(){
 function setSiderbar(){
   var siderbar = document.getElementById('siderbar');
   if(siderbar){
-    var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-    var distance;
-    if(getStyle(document.getElementById('dismiss_tag')).display === 'none'){
-      if(getStyle(document.getElementsByTagName('header')[0]).position === 'fixed'){
-        distance = scrollTop;
-      }else{
-        if(scrollTop > 80){
-          distance = scrollTop - 80;
+    var windowHeight = getWindowHeight();
+    var siderHeight = siderbar.clientHeight;
+    var footHeight = document.getElementsByTagName('footer')[0].clientHeight;
+    if(windowHeight >= siderHeight+footHeight){
+      var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+      var distance;
+      if(getStyle(document.getElementById('dismiss_tag')).display === 'none'){
+        if(getStyle(document.getElementsByTagName('header')[0]).position === 'fixed'){
+          distance = scrollTop;
         }else{
-          distance = 0;
+          if(scrollTop > 80){
+            distance = scrollTop - 80;
+          }else{
+            distance = 0;
+          }
         }
+        siderbar.style.marginTop = '' + distance + 'px';
       }
-      siderbar.style.marginTop = '' + distance + 'px';
     }
-  }else{
-    return;
   }
 }
 

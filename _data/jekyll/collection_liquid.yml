@@ -1,0 +1,44 @@
+- name: Collections
+  desc: 每个集合都可以通过站点级的site变量获取，比如要获取/_albums下的集合，可以使用{{ site.albums }}。 每个集合都是一个文件组成的数组。通过{{ site.collections }}可以获取所有集合， 包括在_config.yml中定义的元数据(如果有定义)。
+  data:
+   - name: label
+     desc: 集合的名字。
+
+   - name: docs
+     desc: 集合的文件组成的数组。
+
+   - name: files
+     desc: 集合中的静态文件组成的数组。
+
+   - name: relative_directory
+     desc: 集合的源目录相对于站点source的相对路径。
+
+   - name: directory
+     desc: 集合源目录的绝对路径。
+
+   - name: output
+     desc: 集合中的文件是否能作为独立文件被输出。
+
+- name: Documents
+  desc: 作为文件头信息的补充，每个文件还包含下列属性
+  data:
+   - name: content
+     desc: 如果没有提供头信息，就是未被渲染的内容，不会在集合中生成这个文件。 如果提供了头信息，则是头信息以外的部分。
+
+   - name: output
+     desc: 基于content渲染出的输出。
+
+   - name: path
+     desc: 源文件的绝对地址
+
+   - name: relative_path
+     desc: "源文件相对于站点source的相对地址。"
+
+  #  - name: "url"
+  #    desc: "渲染出的集合的URL。只有在站点的设置文件中设置了 output: true的集合才能将文件渲染到目的地"。
+
+   - name: collection
+     desc: 文件所属集合的名字。
+
+   - name: date
+     desc: 文件所属集合的日期。

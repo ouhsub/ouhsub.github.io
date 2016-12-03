@@ -1,0 +1,539 @@
+<div class="chapter-item">
+  <a name="项目结构"></a>
+  <h2 class="chapter-title">项目结构</h2>
+  <article>
+    <ul>
+      <li>
+        <h3>目录结构</h3>
+        <p>
+          Jekyll目录结构在项目组织上有重要的作用，
+          基本的Jekyll网站的目录结构:
+        </p>
+        <ul class="dir-container">
+          <li>_config.yml</li>
+          <li>_drafts/</li>
+          <li>_includes/</li>
+          <li>_layouts/</li>
+          <li>_posts/</li>
+          <li>_data/</li>
+          <li>_site</li>
+          <li>.jekyll-metadata</li>
+          <li>assets</li>
+          <li>index.html</li>
+        </ul>
+        各文件、目录作用:
+        <ol>
+          {% for dir in site.data.jekyll.directories %}
+          <li>
+            <h4>{{ dir.name }}</h4>
+            <p>
+              {{ dir.desc }}
+            </p>
+          </li>
+          {% endfor %}
+        </ol>
+      </li>
+      <li>
+        <h3>数据结构</h3>
+        <p>
+          Jekyll作为一个静态站点生成器，对数据的组织和处理可以说是其核心中的核心。
+          要想玩转Jekyll，对数据结构的宏观把握可谓是必不可少的。
+        </p>
+        <p>
+          Jekyll 会遍历网站搜寻要处理的文件。
+          任何有 YAML 头信息的文件，包括_config.yml、数据文件等，都是要处理的对象。
+          对于每一个这样的文件，Jekyll都会通过Liquid模板工具来生成一系列的数据。
+        </p>
+        <ol>
+          {% for var_group in site.data.jekyll.variables %}
+          <li>
+            <h4>{{ var_group.name }}</h4>
+            {% if var_group.desc %}
+            <p>{{ var_group.desc }}</p>
+            {% endif %}
+            <ul>
+              {% for variable in var_group.data %}
+              <li>
+                <strong>{{ variable.name }}</strong>
+                <p>{{ variable.desc }}</p>
+              </li>
+              {% endfor %}
+            </ul>
+          </li>
+          {% endfor %}
+        </ol>
+      </li>
+      <li>
+        <h3>模板引擎</h3>
+        <p>
+          Jekyll 使用 Liquid模板语言，支持所有标准的Liquid标签和过滤器 。
+          Jekyll 甚至增加了几个过滤器和标签，方便使用。
+          关于Liquid详细知识请参考<a href="https://shopify.github.io/liquid/" target="_blank">官方文档</a>。
+          这里只做简单的介绍。
+        </p>
+        <p>
+          Liquid有两种标记，一种用于输出，称为output标记，用{% raw %}{{ output }}{% endraw %}来输出内容;
+          另一种用于执行命令或动作处理，称为tag标记，用{% raw %}{% tag %}{% endraw %}来处理逻辑。
+        </p>
+        <ol>
+          <li>
+            <h4>过滤器</h4>
+            <p>
+              对于output标记除了通过正确的格式引用变量外，还可在变量后面添加各种过滤器来对变量或其他输入进行格式化处理。
+            </p>
+            <ul>
+              {% for filter in site.data.jekyll.filter %}
+              <strong>{{ filter.name }}</strong><br>
+              <p>
+                {{ filter.desc }} <br>
+                {% if filter.name == "Slugify" %}
+                <div>
+                  <p>
+                    slugify过滤器接受一个参数，用于指定过滤什么。默认值就是default。
+                    其余还可以使用的选项有:
+                  </p>
+                  <ul>
+                    <li>
+                      none: 无字符。
+                    </li>
+                    <li>
+                      raw: 空格。
+                    </li>
+                    <li>
+                      default: 空格和非数字字母字符。
+                    </li>
+                    <li>
+                      pretty: 空格和非数字字母字符但是除了 ._~!$&amp;'()+,;=@
+                    </li>
+                  </ul>
+                </div>
+                {% endif %}
+                {% for eg in filter.eg %}
+                  <code class="language-markup">{{ eg.filter }}</code><br>
+                  {% if eg.output != null %}
+                  {{ eg.output }} <br>
+                  {% endif %}
+                {% endfor %}
+              </p>
+              {% endfor %}
+            </ul>
+          </li>
+          <li>
+            <h4>标签</h4>
+            <p>tag标记多用于执行命令，类似于一个动作。流程控制等都是通过tag标记实现的。</p>
+            <ul>
+              <li>
+                <h5>include</h5>
+                <p>
+                  如果要将一个页面片段包含进站点的多个地方，可以使用include标签。
+                  <pre><code class="language-markup">{% raw %}{% include footer.html %}{% endraw %}</code></pre>
+                  Jekyll默认将包含文件放在根目录下的_includes目录下。
+                </p>
+                <p>
+                  使用变量作为文件名:
+                  要嵌入的文件名可以是原样照搬，或者像这样使用Liquid变量: {% raw %}{% include {{my_variable}} %}{% endraw %}。
+                </p>
+                <p>
+                  可以向include中传递参数。
+                  省略引号来使用变量的值，而不能使用Liquid的花括号语法。
+                  <pre><code class="language-markup">{% raw %}{% include footer.html param="value" variable-param=page.variable %}{% endraw %}</code></pre>
+                  通过Liquid变量include可以引用这些变量。
+                  <pre><code class="language-markup">{% raw %}{{ include.param }}{% endraw %}</code></pre>
+                </p>
+                <p>
+                  <h6>include_relative</h6>
+                  可以引入相对于当前文件的页面片段:
+                  <pre><code class="language-markup">{% raw %}{% include_relative somedir/footer.html %}{% endraw %}</code></pre>
+                  不需要将这类文件存放在_includes文件夹中，文件是按照引用的相对位置来设置的。
+                  比如，_posts/2014-09-03-my-file.markdown使用了include_relative标签，
+                  引入文件必须放在_posts目录，或其子目录内，而不能放在其他位置。
+                  include标签的其他特性，也可用在include_relative标签上，比如使用变量。
+                </p>
+              </li>
+              <li>
+                <h5>highlight</h5>
+                <p>
+                  Jekyll有内置的语法高亮支持，支持的语言超过60种，这是通过Rouge来实现的。
+                  Jekyll3及以上版本，默认设置了Rouge支持，要在Jekyll2中使用，可以将highlighter
+                  设置为rouge并确保下载了rouge gem。
+                </p>
+                <p>
+                  此外还可以使用Pygments来高亮显示代码段。
+                  要使用Pygments必须在系统中下载了Python，下载了pygments.rb gem
+                  并且在配置文件中将highlighter设置为pygments。Pygments支持100多种语言。
+                </p>
+                <p>
+                  要想为代码着色，需要用标签包围代码段:
+                  <pre><code class="language-markup">{% raw %}{% highlight ruby %}
+def foo
+  puts 'foo'
+end
+{% endhighlight %}{% endraw %}</code></pre>
+                </p>
+                <p>
+                  高亮标签中的参数(上例中是ruby)是要着色的语言类型的注入值。
+                  要找到想要高亮的语言该使用什么注入值，
+                  请查找<a href="https://github.com/jneen/rouge/wiki/List-of-supported-languages-and-lexers" target="_blank">Rouge Wiki</a>
+                  或<a href="http://pygments.org/docs/lexers/" target="_blank">Pygments’ Lexers page</a>。
+                </p>
+                <h6>linenos</h6>
+                <p>
+                  highlight标签还可以有第二个可选参数linenos用来定义行号。包含行号参数后，将强制显示行号。
+                  <pre><code class="language-markup">{% raw %}{% highlight ruby linenos %}
+def foo
+  puts 'foo'
+end
+{% endhighlight %}{% endraw %}</code></pre>
+                </p>
+                <h6>语法高亮的样式表</h6>
+                <p>要让高亮显示，需要引入高亮样式表，例如syntax.css，Github使用的样式表。
+                  如果使用了行号，还需要引入额外的CSS。
+                </p>
+              </li>
+              <li>
+                <h5>link</h5>
+                <p>要创建一个指向一个集合的文档、一篇文章、一个独立页面或文件的链接，可以使用link标签。
+                  它可以根据路径生成正确的永久链接。
+                </p>
+                <p>
+                  使用link标签的时候必须包含文件扩展名。
+                  <pre><code class="language-markup">{% raw %}{{ site.baseurl }}{% link _collection/name-of-document.md %}
+{{ site.baseurl }}{% link _posts/2016-07-26-name-of-post.md %}
+{{ site.baseurl }}{% link news/index.html %}
+{{ site.baseurl }}{% link /assets/files/doc.pdf %}{% endraw %}</code></pre>
+                  可以在markdown文件中创建链接:
+                  <pre><code class="language-markup">{% raw %}[Link to a document]({{ site.baseurl }}{% link _collection/name-of-document.md %})
+[Link to a post]({{ site.baseurl }}{% link _posts/2016-07-26-name-of-post.md %})
+[Link to a page]({{ site.baseurl }}{% link news/index.html %})
+[Link to a file]({{ site.baseurl }}{% link /assets/files/doc.pdf %}){% endraw %}</code></pre>
+                </p>
+              </li>
+              <li>
+                <h5>Post URL</h5>
+                <p>要在站点中引入一篇文章的链接，可以使用post_url标签，它可以正确的生成指定文章的永久链接。
+                  <pre><code class="language-markup">{% raw %}{{ site.baseurl }}{% post_url 2010-07-21-name-of-post %}</code></pre>
+                  如果文章放置在子目录中，需要包含子目录路径:
+                  <pre><code class="language-markup">{{ site.baseurl }}{% post_url /subdir/2010-07-21-name-of-post %}</code></pre>
+                  使用post_url的时候没有必要包含文件的扩展名。<br>
+                  也可以使用post_url在markdown文件中创建链接。
+                  <pre><code class="language-markup">[Name of Link]({{ site.baseurl }}{% post_url 2010-07-21-name-of-post %}){% endraw %}</code></pre>
+                </p>
+              </li>
+              <li>
+                <h5>Gist</h5>
+                <p>
+                  使用gist标签可以方便的在站点中嵌入Github Gist，无论是私有还是共有gist:
+                  <pre><code class="language-markup">{% raw %}{% gist parkr/931c1c8d465a04042403 %}</code></pre>
+                  还可以指定gist中要显示的文件名。
+                  <pre><code class="language-markup">{% gist parkr/931c1c8d465a04042403 jekyll-private-gist.markdown %}{% endraw %}</code></pre>
+                  要使用gist标签，需要添加jekyll-gist gem 到项目中。
+                </p>
+              </li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <h3>头信息</h3>
+        <p>
+          任何只要包含YAML头信息的文件在Jekyll中都能被当做一个特殊的文件来处理。
+          头信息必须在文件的开始部分，并且需要按照 YAML 的格式写在两行三虚线之间。
+          在这两行的三虚线之间，可以设置一些预定义的变量或者自定义的变量。
+          这样在接下来的文件和任意模板中或者在包含这些页面或博客的模板中都
+          可以通过使用Liquid标签来访问这些变量。
+        </p>
+        <ol>
+          <li>
+            <h4>预定义全局变量</h4>
+            <p>
+              <strong>layout</strong><br>
+              用于指定模板文件，不需要扩展名。模板文件需要放在 _layouts 目录下。
+            </p>
+            <p>
+              <strong>permalink</strong><br>
+              博客默认的URL地址为/year/month/day/title.html，
+              这个变量用于改变博客的默认URL，设置变量后，成为最终的URL地址。
+            </p>
+            <p>
+              <strong>published</strong><br>
+              当站点生成的时候，如果不需要展示一个具体的博文，可以设置这个变量为 false。
+            </p>
+          </li>
+          <li>
+            <h4>预定义文章变量</h4>
+            <p>
+              <strong>category/categories</strong><br>
+              除过将博客文章放在某个文件夹下面外，还可以根据文章的类别来给他们设置一个或者多个分类属性。
+              博客生成的时候这些文章就可以根据这些分类来阅读。
+              在一个文章中多个类别可以通过YAML list来指定，或者用空格隔开。
+            </p>
+            <p>
+              <strong>tags</strong><br>
+              类似分类，一篇文章也可以给它增加一个或者多个标签。
+              同样多个标签之间可以通过YAML list或者空格隔开。
+            </p>
+            <p>
+              <strong>date</strong><br>
+              这里的日期会覆盖文章名字中的日期。这样就可以用来确定文章分类的正确。
+              格式(YYYY-MM-DD HH:MM:SS +/-TTTT)其中小时，分钟，秒钟与时区偏移量是可选的。
+            </p>
+          </li>
+          <li>
+            <h4>自定义变量</h4>
+            <p>在头信息中没有预先定义的任何变量都会在数据转换中通过Liquid模板被调用</p>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <h3>数据文件</h3>
+        <p>
+          Jekyll支持从_data文件夹下的YAML文件，JSON文件或CSV文件(必须包含一个首部行)中加载数据。
+          这一特性可以避免模板中的重复，并且可以不改变_config.yml文件的情况下改变站点配置。
+          插件/主题也可以利用数据文件来设置配置变量。
+        </p>
+        <ol>
+          例子:
+          <li>
+            <h4>成员列表</h4>
+            <pre><code class="language-yaml">#  _data/members.yml:
+- name: Eric Mill
+  github: konklone
+
+- name: Parker Moore
+  github: parkr
+
+- name: Liu Fengyun
+  github: liufengyun</code></pre>
+            这些数据可以通过site.data.members获取(文件名决定变量名)。
+            然后可以在模板中渲染成员列表数据咯:
+            <pre><code class="language-markup">&lt;ul&gt;
+  {% raw %}{% for member in site.data.members %}
+  &lt;li&gt;
+    &lt;a href="https://github.com/{{ member.github }}"&gt;
+      {{ member.name }}
+    &lt;/a&gt;
+  &lt;/li&gt;
+  {% endfor %}{% endraw %}
+&lt;/ul&gt;</code></pre>
+          </li>
+          <li>
+            <h4>组织机构</h4>
+            <p>
+              数据文件可以放置在_data文件夹下的子文件夹中，每一层的文件夹都会被添加到变量的命名空间。
+              这里每个Github组织的信息都分别放在了orgs文件夹下的数据文件中。
+            </p>
+            <pre><code class="language-yaml">#  _data/orgs/jekyll.yml
+username: jekyll
+name: Jekyll
+members:
+  - name: Tom Preston-Werner
+    github: mojombo
+
+  - name: Parker Moore
+    github: parkr</code></pre>
+            <pre><code class="language-yaml">#  _data/orgs/doeorg.yml
+username: doeorg
+name: Doe Org
+members:
+  - name: John Doe
+    github: jdoe</code></pre>
+            这些数据可以通过site.data.orgs获取。
+            然后可以在模板中渲染组织列表数据:
+            <pre><code class="language-markup">&lt;ul&gt;
+{% raw %}{% for org_hash in site.data.orgs %}
+  {% assign org = org_hash[1] %}
+  &lt;li&gt;
+    &lt;a href="https://github.com/{{ org.username }}"&gt;
+      {{ org.name }}
+    &lt;/a&gt;
+    ({{ org.members | size }} members)
+  &lt;/li&gt;
+{% endfor %}{% endraw %}
+&lt;/ul&gt;</code></pre>
+          </li>
+          <li>
+            <h4>获取特定作者数据</h4>
+            <p>
+              pages和posts也可以获取一个特定的数据值。
+            </p>
+            <pre><code class="language-yaml">#  _data/people.yml
+dave:
+  name: David Smith
+  twitter: DavidSilvaSmith</code></pre>
+      <pre><code class="language-markup">---
+title: sample post
+author: dave
+---
+
+{% raw %}{% assign author = site.data.people[page.author] %}
+&lt;a rel="author"
+      href="https://twitter.com/{{ author.twitter }}"
+      title="{{ author.name }}"&gt;
+        {{ author.name }}{% endraw %}
+&lt;/a&gt;</code></pre>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <h3>集合</h3>
+        <p>
+          并非所有页面都是post或者page。集合可以用于定义一种新的文档模式，除了普通post或page的表现外，
+          还可以定义其特定的属性或命名空间。如开源项目的多种方法、团队成员或者对话内容等都可以用到集合。
+        </p>
+        <ol>
+          <li>
+            <h4>使用集合:</h4>
+            <ul>
+              <li>
+                <h5>告知Jekyll从集合的链接中读取内容。</h5>
+                <p>
+                  在_config.yml文件添加如下内容:
+                  <pre><code class="language-yaml">#_config.yml
+collections:
+  - my_collection</code></pre>
+                    还可以定义集合的一些元数据:
+                    <pre><code class="language-yaml">#_config.yml
+collections:
+  - my_collection
+    foo: bar</code></pre>
+                      或者为集合设置默认属性:
+                      <pre><code class="language-yaml">#_config.yml
+defaults:
+  - scope:
+    path: ""
+    type: my_collection
+    values:
+    layout: page</code></pre>
+                </p>
+              </li>
+              <li>
+                <h5>增加内容</h5>
+                <p>
+                  创建相应的文件夹(如 &lt;source&gt;/_my_collection)并添加文件。
+                  如果文件存在YAML头信息，那就读取其中的数据，并且头信息后的内容都保存为文件的content属性值。
+                  如果没有YAML头信息，Jekyll就不会生成集合中的这个文件咯。
+                </p>
+                <p>
+                  文件夹的名称必须指定为_config.yml文件中配置的名称，并添加_符号。
+                </p>
+              </li>
+              <li>
+                <h5>选择性的渲染集合中的文件为独立页面。</h5>
+                <p>
+                  如果想将集合中的每个文件渲染为统一样式的文件，
+                  可以在_config.yml文件中将集合的元数据output关键字设置为true:
+                  <pre><code class="language-yaml">#_config.yml
+collections:
+  my_collection:
+    output: true</code></pre>
+                  这将集合中的每个文件生成一个页面。
+                  比如，有这样一个文件_my_collection/some_subdir/some_doc.md，
+                  它将被渲染并输出为&lt;dest&gt;/my_collection/some_subdir/some_doc.html。
+                </p>
+                <p>
+                  像文章的永久链接一样，集合中的文件也可以通过元数据permalink设置永久链接:
+                  <pre><code class="language-yaml">#_config.yml
+collections:
+  my_collection:
+    output: true
+    permalink: /awesome/:path/</code></pre>
+                  比如，有一个文件_my_collection/some_subdir/some_doc.md，
+                  将会被输出为&lt;dest&gt;/awesome/some_subdir/some_doc/index.html。
+                </p>
+              </li>
+              <li>
+                <h5>不要忘记添加YAML头文件，否则，文件被作为静态文件直接复制到输出结果中。</h5>
+                <p>
+                  <ul>
+                    <li>
+                      <strong>collection</strong><br>
+                      当前集合的标签
+                    </li>
+                    <li>
+                      <strong>path</strong><br>
+                      文件相对于集合目录的路径
+                    </li>
+                    <li>
+                      <strong>name</strong><br>
+                      文件名，空格和非字母数字字符序列化为短横线(-)
+                    </li>
+                    <li>
+                      <strong>title</strong><br>
+                      文件的小写标题(头信息用定义)，空格和非字母数字字符序列化为短横线(-)。
+                      如果头信息中没有定义title则使用文件名。
+                    </li>
+                    <li>
+                      <strong>output_ext</strong><br>
+                      输出文件的扩展名。
+                    </li>
+                  </ul>
+                </p>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <h4>Liquid 属性</h4>
+            <ul>
+              {% for var in site.data.jekyll.collection_liquid %}
+                <h5>{{ var.name }}</h5>
+                <p>{{ var.desc }}</p>
+                <ul>
+                  {% for li in var.data %}
+                    <li>
+                      <strong>{{ li.name }}</strong> <br>
+                      {{ li.desc }}
+                    </li>
+                  {% endfor %}
+                  <li></li>
+                </ul>
+              {% endfor %}
+              <li>
+                <h4>获取集合属性</h4>
+                <p>
+                  YAML头文件中定义的数据可以在站点的任意地方获取到。
+                  使用上例的site.albums集合，集合中的文件使用下面的头文件:
+                  <pre><code class="language-yaml">---
+title: "Josquin: Missa De beata virgine and Missa Ave maris stella"
+artist: "The Tallis Scholars"
+director: "Peter Phillips"
+works:
+  - title: "Missa De beata virgine"
+    composer: "Josquin des Prez"
+    tracks:
+      - title: "Kyrie"
+        duration: "4:25"
+      - title: "Gloria"
+        duration: "9:53"
+      - title: "Credo"
+        duration: "9:09"
+      - title: "Sanctus &amp; Benedictus"
+        duration: "7:47"
+      - title: "Agnus Dei I, II &amp; III"
+        duration: "6:49"
+---</code></pre>
+                  集合中的每一个album都可以通过这样的模板获取:
+                  <pre><code class="language-markup">{% raw %}{% for album in site.albums %}
+  &lt;h2&gt;{{ album.title }}&lt;/h2&gt;
+  &lt;p&gt;
+    Performed by {{ album.artist }}{% if album.director %},
+    directed by {{ album.director }}{% endif %}
+  &lt;/p&gt;
+  {% for work in album.works %}
+    &lt;h3&gt;{{ work.title }}&lt;/h3&gt;
+    &lt;p&gt;Composed by {{ work.composer }}&lt;/p&gt;
+    &lt;ul&gt;
+      {% for track in work.tracks %}
+        &lt;li&gt;{{ track.title }} ({{ track.duration }})&lt;/li&gt;
+      {% endfor %}
+    &lt;/ul&gt;
+  {% endfor %}
+{% endfor %}{% endraw %}</code></pre>
+                </p>
+              </li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </article>
+</div>

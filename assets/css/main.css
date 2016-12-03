@@ -8,6 +8,7 @@ body {
   padding: 0;
   overflow-y: scroll;
   color: #666;
+  font-family: STHeiti, "Microsoft YaHei", MingLiu, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 ul,li {
   margin: 0;
@@ -126,6 +127,7 @@ header>nav {
 .fixed{
   position: fixed;
   z-index: 1;
+  box-shadow: 1px 1px 8px #ccc;
 }
 .nav-container>li{
   float: left;
@@ -274,10 +276,22 @@ header>nav {
 .category-item>a:hover,
 .tag-item:hover {
   color: #000;
-  text-decoration: underline;
+}
+@keyframes shadow
+{
+from {box-shadow: 0 0 0 #666}
+to {box-shadow: 2px 2px 2px #666;}
 }
 .tag-item {
+  border-radius: 4px;
   font-size: 0.9em;
+  display: inline-block;
+  vertical-align: text-bottom;
+  padding: 2px 8px 2px 0;
+}
+.tag-item:hover {
+  animation: shadow .5s;
+  box-shadow: 2px 2px 2px #666;
 }
 .dismiss-icon {
   display: none;
@@ -344,7 +358,6 @@ header>nav {
 }
 .main-title {
   width: 230px;
-  font-size: 1.2em;
   font-weight: normal;
   text-align: right;
   color: #666;
@@ -387,13 +400,11 @@ header>nav {
   margin: 0;
   padding: 0;
   margin-bottom: 10px;
-  font-size: 1.3em;
 }
 .article-excerpt{
   margin: 0;
   padding: 0;
   margin-bottom: 10px;
-  font-size: 1.2em;
 }
 @media screen and (max-width: 767px) {
   .main-title {
@@ -439,7 +450,6 @@ header>nav {
   text-decoration: underline;
 }
 .project-info-container h2 {
-  font-size: 1.3em;
   margin: 0;
 }
 .project-img-container{
@@ -492,11 +502,9 @@ header>nav {
   text-decoration: underline;
 }
 .kind-item h2 {
-  font-size: 1.2em;
   margin: 10px 0 0;
 }
 .kind-item p {
-  font-size: 1em;
   margin: 0;
 }
 .kind-item span {
@@ -524,7 +532,6 @@ header>nav {
   margin-bottom: 40px;
 }
 .about-title h1{
-  font-size: 1.1em;
   color: #aaa;
   border-bottom: 2px solid #aaa;
   margin: 0 0 10px;
@@ -774,14 +781,13 @@ header>nav {
 .blog-body {
   color: #333;
 }
-.chapter-title {
-  font-size: 1.1em;
-}
 .chapter-item {
-  margin-bottom: 30px;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  border-bottom: 1px dashed #666;
 }
-.blog-body h3 {
-  font-size: 1em;
+.chapter-item:last-child{
+  border-bottom: none;
 }
 
 /* directory-component */

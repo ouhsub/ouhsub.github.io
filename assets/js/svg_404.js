@@ -47,17 +47,17 @@ var pathArr = [
 function initPage(){
   width = svg.clientWidth;
   height = svg.clientHeight;
-  if(width > 768){
+  if(width >= 768){
     r = Math.floor(width/18);
     min_x = 0.5;
     min_y = 2;
     max_x = 5.5;
     max_y = 7;
-    if(width > 1240){
+    if(width >= 1200){
       min_x = 0.5;
       min_y = 1;
       max_x = 5.5;
-      max_y = 5;
+      max_y = 4;
     }
   }else{
     r = Math.floor(width/9);

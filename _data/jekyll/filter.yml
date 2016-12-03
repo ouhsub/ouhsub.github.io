@@ -1,0 +1,153 @@
+- name: Relative URL
+  desc: "将baseurl作为前缀添加到输入中。如果站点是基于子路径而不是根路径的，这个过滤器将很有用。"
+  eg:
+    - filter: '{{ "/assets/style.css" | relative_url }}'
+      output: '/my-baseurl/assets/style.css'
+
+- name: Absolute URL
+  desc: 将url和baseurl作为前缀添加到输入中。
+  eg:
+    - filter: '{{ "/assets/style.css" | absolute_url }}'
+      output: 'http://example.com/my-baseurl/assets/style.css'
+
+- name: Date to XML Schema
+  desc: 将日期转化为XML模式(ISO 8601)的格式。
+  eg:
+    - filter: '{{ site.time | date_to_xmlschema }}'
+      output: '2008-11-07T13:07:54-08:00'
+
+- name: 'Date to RFC-822 Format'
+  desc: 将日期转化为RFC-822格式，用于RSS订阅。
+  eg:
+    - filter: '{{ site.time | date_to_rfc822 }}'
+      output: 'Mon, 07 Nov 2008 13:07:54 -0800'
+
+- name: Date to String
+  desc: 将日期转化为短格式的日期。
+  eg:
+    - filter: '{{ site.time | date_to_string }}'
+      output: 07 Nov 2008
+
+- name: Date to Long String
+  desc: 将日期转化为长格式的日期。
+  eg:
+    - filter: '{{ site.time | date_to_long_string }}'
+      output: 07 November 2008
+
+- name: Where
+  desc: 将符合给定键值对的所有对象放入一个数组中。
+  eg:
+    - filter: '{{ site.members | where:"graduation_year","2014" }}'
+
+- name: Where Expression
+  desc: '将能使给定表达式为真值的多有对象放入数组，v3.2.0及以上版本。'
+  eg:
+    - filter: '{{ site.members | where_exp:"item","item.graduation_year == 2014" }}'
+    - filter: '{{ site.members | where_exp:"item","item.graduation_year < 2014" }}'
+    - filter: '{{ site.members | where_exp:"item","item.projects contains foo" }}'
+
+- name: Group By
+  desc: 使用给定属性组织数组的元素。
+  eg:
+    - filter: '{{ site.members | group_by:"graduation_year" }}'
+      output: '[{"name"=>"2013", "items"=>[...]},{"name"=>"2014", "items"=>[...]}]'
+
+- name: XML Escape
+  desc: 对一些字符串转码，以方便显示在XML中。
+  eg:
+    - filter: '{{ page.content | xml_escape }}'
+
+- name: CGI Escape
+  desc: “CGI转码，用于URL中，将所有的特殊字符(非数字字母)转化为 %XX 的形式。”
+  eg:
+    - filter: '{{ "foo,bar;baz?" | cgi_escape }}'
+      output: 'foo%2Cbar%3Bbaz%3F'
+
+- name: URI Escape
+  desc: URI转码
+  eg:
+    - filter: '{{ "foo, bar \baz?" | uri_escape }}'
+      output: 'foo,%20bar%20%5Cbaz?'
+
+- name: Number of Words
+  desc: 统计文章中的字数。
+  eg:
+    - filter: '{{ page.content | number_of_words }}'
+      output: '1337'
+
+- name: Array to Sentence
+  desc: 将数组转换为句子，列举标签时很有用，可设置连接符参数。
+  eg:
+    - filter: '{{ page.tags | array_to_sentence_string }}'
+      output: foo, bar, and baz
+    - filter: "{{ page.tags | array_to_sentence_string: 'or' }}"
+      output: foo, bar, or baz
+
+- name: Markdownify
+  desc: 将Markdown格式的字符串转换为HTML。
+  eg:
+    - filter: '{{ page.excerpt | markdownify }}'
+
+- name: Smartify
+  desc: 转换"quotes"为“smart quotes.”
+  eg:
+    - filter: '{{ page.title | smartify }}'
+
+- name: Converting Sass/SCSS
+  desc: 将Sass-或SCSS-格式的字符串转换为CSS.
+  eg:
+    - filter: '{{ some_scss | scssify }}'
+    - filter: '{{ some_sass | sassify }}'
+
+- name: Slugify
+  desc: 将字符串转换为小写的URL "slug"。
+  eg:
+    - filter: '{{ "The _config.yml file" | slugify }}'
+      output: the-config-yml-file
+    - filter: '{{ "The _config.yml file" | slugify: "pretty" }}'
+      output: the-_config.yml-file
+
+- name: Data To JSON
+  desc: 转换Hash或数组为JSON格式。
+  eg:
+    - filter: '{{ site.data.projects | jsonify }}'
+
+- name: Normalize Whitespace
+  desc: 将所有空白符转换为一个空格。
+  eg:
+    - filter: '{{ "a \n b" | normalize_whitespace }}'
+
+- name: Sort
+  desc: "数组排序，可用的hash参数: 1.属性名 2.nils order (first or last)。"
+  eg:
+    - filter: '{{ page.tags | sort }}'
+    - filter: "{{ site.posts | sort: 'author' }}"
+    - filter: "{{ site.pages | sort: 'title', 'last' }}"
+
+- name: Sample
+  desc: "从数组中选择一个随机值，可选参数: 选取多个值。"
+  eg:
+    - filter: '{{ site.pages | sample }}'
+    - filter: '{{ site.pages | sample:2 }}'
+
+- name: To Integer
+  desc: 将一个字符串或布尔值转换为整数。
+  eg:
+    - filter: '{{ some_var | to_integer }}'
+
+- name: Array Filters
+  desc: 从一个数组中push, pop, shift, 或者unshift元素。原数组不变，只是创建副本并在副本上操作。
+  eg:
+    - filter: "{{ page.tags | push: 'Spokane' }}"
+      output: "['Seattle', 'Tacoma', 'Spokane']"
+    - filter: "{{ page.tags | pop }}"
+      output: "['Seattle']"
+    - filter: "{{ page.tags | shift }}"
+      output: "['Tacoma']"
+    - filter: '{{ page.tags | unshift: "Olympia" }}'
+      output: "['Olympia', 'Seattle', 'Tacoma']"
+
+- name: Inspect
+  desc: 将对象转换为字符串表示，用于debugging。
+  eg:
+    - filter: "{{ some_var | inspect }}"
