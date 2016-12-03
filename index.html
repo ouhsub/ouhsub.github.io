@@ -31,7 +31,7 @@ title: 首页 | Ouhsub
           </p>
           <p>
             {% for tag in node.tags %}
-            <a href="{{ BASE_PATH }}/tag/?target={{tag}}">{{ tag }}</a>
+            <a href="{{ BASE_PATH }}/tag?target={{tag}}">{{ tag }}</a>
             {% endfor %}
           </p>
         </div>

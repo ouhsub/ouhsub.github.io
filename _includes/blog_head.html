@@ -11,7 +11,7 @@
     </p>
     <p>
       {% for tag in page.tags %}
-      <a href="{{ BASE_PATH }}/tag/?target={{ tag }}">{{ tag }}</a>
+      <a href="{{ BASE_PATH }}/tag?target={{ tag }}">{{ tag }}</a>
       {% endfor %}
     </p>
     <p class="blog-excerpt">{{ page.excerpt }}</p>
