@@ -24,6 +24,10 @@
       url: https://nodejs.org/en/
       desc: NodeJS官网
 
+    - name: CANIUSE
+      url: http://caniuse.com/
+      desc: Can I Use官网
+
 - name: 语言类
   data:
     - name: Liquid

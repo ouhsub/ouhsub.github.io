@@ -1,0 +1,56 @@
+---
+layout: blog
+title: Less基础详解
+excerpt: Less是一种CSS预编译语言，在CSS的语法基础之上，引入了变量，Mixin，运算以及函数等功能，大大简化了CSS的编写，并且降低了CSS的维护成本。借助Less可以更便捷的进行Web开发。
+tags: less
+chapters: [为什么要使用Less, Less语法精要, 怎样高效使用Less]
+scripts: [prism.default.basic]
+styles: [prism.default.basic]
+---
+
+{% include blog_head.html %}
+<hr>
+<div class="blog-body">
+  <div class="chapter-item">
+    <a name="为什么要使用Less"></a>
+    <h2 class="chapter-title">为什么要使用Less</h2>
+    <article>
+      <p>
+        作为一门标记性语言，CSS的语法相对简单，对使用者的要求较低，但同时也存在着一些问题: CSS需要书
+        写大量看似没有逻辑的代码，不方便维护及扩展，不利于复用，很难写出组织良好且易于维护的CSS代码。
+      </p>
+      <p>
+        Less在CSS的语法基础之上，引入了变量，Mixin，运算以及函数等功能，大大简化了CSS的编写，
+        并且降低了CSS的维护成本。借助Less可以更便捷的进行Web开发。
+      </p>
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="Less语法精要"></a>
+    <h2 class="chapter-title">Less语法精要</h2>
+    <article>
+      <ul>
+        {% include_relative includes/less_detailed_import.html %}
+        {% include_relative includes/less_detailed_variables.html %}
+        {% include_relative includes/less_detailed_mixin.html %}
+        {% include_relative includes/less_detailed_extend.html %}
+        {% include_relative includes/less_detailed_grands.html %}
+        {% include_relative includes/less_detailed_function.html %}
+      </ul>
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="怎样高效使用Less"></a>
+    <h2 class="chapter-title">怎样高效使用Less</h2>
+    <article>
+
+    </article>
+  </div>
+</div>
+<hr>
+<div class="blog-foot">
+  <h3>参考资料</h3>
+  <p class="link-item">
+    <a href="http://lesscss.org/features/" target="_blank">less官方文档</a>
+  </p>
+</div>

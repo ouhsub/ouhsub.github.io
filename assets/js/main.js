@@ -108,7 +108,7 @@ function setActiveNav(){
     path = 'home';
   }else{
     path = path.split('/')[0];
-    if(path === 'blogs' || path === 'category' || path === 'tag'){
+    if(path === 'blogs' || path === 'category' || path === 'tag' || path === 'docs'){
       path = 'blog';
     }else{
       path = path;

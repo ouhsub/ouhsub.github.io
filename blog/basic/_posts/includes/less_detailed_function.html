@@ -1,0 +1,100 @@
+<li>
+  <h3>内置函数</h3>
+  <ol>
+    <li>
+      <h4>Misc Function(大杂烩)</h4>
+      <ul>
+        <li>
+          <h5>color</h5>
+          <p>
+            将颜色字符串转化为颜色值 <br>
+            参数: 特定颜色字符串  <br>
+            返回值: 颜色值 <br>
+            例子: color("#aaa"); <br>
+            输出: #aaa
+          </p>
+        </li>
+        <li>
+          <h5>image-size</h5>
+          <p>
+            从文件获取图像尺寸 <br>
+            参数: 需要获取尺寸的文件(字符串)<br>
+            返回值: 尺寸<br>
+            例子: image-size("file.png");<br>
+            输出: 10px 10px<br>
+            注意: 需要node执行环境。<br>
+            添加版本: v2.2.0
+          </p>
+        </li>
+        <li>
+          <h5>image-width</h5>
+          <p>
+            获取图像宽度<br>
+            参数: 需要获取尺寸的文件(字符串)<br>
+            返回值: 宽度值<br>
+            例子: image-width("file.png");<br>
+            输出: 10px<br>
+            注意: 需要node执行环境<br>
+            添加版本: v2.2.0
+          </p>
+        </li>
+        <li>
+          <h5>image-height</h5>
+          <p>
+            获取图像高度<br>
+            参数: 需要获取尺寸的文件(字符串)<br>
+            返回值: 高度值<br>
+            例子: image-height("file.png");<br>
+            输出: 10px<br>
+            注意: 需要node执行环境<br>
+            添加版本: v2.2.0
+          </p>
+        </li>
+        <li>
+          <h5>convert</h5>
+          <p>
+            转换数值单位<br>
+            参数: 第一个参数是一个包含单位的数值，第二个参数是单位。
+            如果单位是兼容的，数值将会被转换。如果单位不兼容，那就原样返回。<br>
+            兼容的单位组: <pre><code class="language-less">长度: m, cm, mm, in, pt and pc
+时间: s and ms
+角度: rad, deg, grad and turn</code></pre>
+            返回值: 数值<br>
+            例子:
+            <pre><code class="language-less">convert(9s, "ms") //=>9000ms
+convert(14cm, mm) //=>140mm
+convert(8, mm) //=>8 incompatible unit types</code></pre>
+          </p>
+        </li>
+        <li>
+          <h5>data-uri</h5>
+          <p>
+            Inlines a resource and falls back to url() if the ieCompat option is
+            on and the resource is too large, or if you use the function in the browser.
+            If the MIME type is not given then node uses the mime package to determine
+            the correct mime type. <br>
+            参数:
+            mimetype: (Optional) A MIME type string.
+            url: The URL of the file to inline. <br>
+            If there is no mimetype, data-uri function guesses it from
+            filename suffix. Text and svg files are encoded as utf-8
+            and anything else is encoded as base64. <br>
+            If user provided mimetype, the function uses base64 if mimetype
+            argument ends with ;base64. For example, image/jpeg;base64 is
+            encoded into base64 while text/html is encoded into utf-8. <br>
+            <pre><code class="language-less">//例子:
+data-uri('../data/image.jpg'); //=>url('data:image/jpeg;base64,bm90IGFjdHVhbGx5IGEganBlZyBmaWxlCg==');//Output in browser: url('../data/image.jpg');
+data-uri('image/jpeg;base64', '../data/image.jpg'); //=>url('data:image/jpeg;base64,bm90IGFjdHVhbGx5IGEganBlZyBmaWxlCg==');
+data-uri('image/svg+xml;charset=UTF-8', 'image.svg'); //=>url("data:image/svg+xml;charset=UTF-8,%3Csvg%3E%3Ccircle%20r%3D%229%22%2F%3E%3C%2Fsvg%3E");</code></pre>
+          </p>
+        </li>
+        <li>
+          <h5>default</h5>
+          <p>
+            
+          </p>
+        </li>
+      </ul>
+    </li>
+  </ol>
+</li>

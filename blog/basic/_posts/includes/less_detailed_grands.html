@@ -1,0 +1,325 @@
+<li>
+  <h3>流程控制</h3>
+  <ol>
+    <li>
+      <h4>mixin与流程控制</h4>
+      <p>
+        如果要匹配条件表达式，控制就很有用了。
+        为了与css的天性保持一致，Less选择支持guarded mixin而不是if/else声明。
+        in the vein of @media query feature specifications。
+      </p>
+      <pre><code class="language-less">.mixin (@a) when (lightness(@a) >= 50%) {
+background-color: black;
+}
+.mixin (@a) when (lightness(@a) < 50%) {
+background-color: white;
+}
+.mixin (@a) {
+color: @a;
+}
+//引入一个控制块的关键就是when关键词
+.class1 { .mixin(#ddd) }
+.class2 { .mixin(#555) }</code></pre>编译为: <pre><code class="language-css">.class1 {
+background-color: black;
+color: #ddd;
+}
+.class2 {
+background-color: white;
+color: #555;
+}</code></pre>
+      <h5>比较控制</h5>
+      <p>
+        比较操作控制有： >, >=, =, =<, <.
+        此外，true关键字是唯一的真值，
+        这两种表达是一样的:
+      </p>
+      <pre><code class="language-less">.truth (@a) when (@a) { ... }
+.truth (@a) when (@a = true) { ... }
+//其余任何值都是假的
+.class {
+.truth(40); // Will not match any of the above definitions.
+}
+//注意了，也可以比较参数，或者无参的情况：
+@media: mobile;
+.mixin (@a) when (@media = mobile) { ... }
+.mixin (@a) when (@media = desktop) { ... }
+
+.max (@a; @b) when (@a > @b) { width: @a }
+.max (@a; @b) when (@a < @b) { width: @b }</code></pre>
+      <h5>逻辑控制</h5>
+      <p>
+        逻辑控制，语法是基于css媒体查询的。
+      </p>
+      <ol>
+        <li>
+          使用and关键字，组合控制(逻辑与)
+          <pre><code class="language-less">.mixin (@a) when (isnumber(@a)) and (@a > 0) { ... }</code></pre>
+        </li>
+        <li>
+          使用not关键字表示逻辑非
+          <pre><code class="language-less">.mixin (@b) when not (@b > 0) { ... }</code></pre>
+        </li>
+        <li>
+          可以使用or关键字或逗号，表示逻辑或
+          <pre><code class="language-less">.mixin (@a) when (@a > 10), (@a < -10) { ... }</code></pre>
+        </li>
+      </ol>
+      <h5>条件混入</h5>
+      <p>
+        default函数可用于创建条件混入，类似于else或default声明
+      </p>
+      <pre><code class="language-less">.mixin (@a) when (@a > 0) { ...  }
+.mixin (@a) when (default()) { ... }
+// matches only if first mixin does not, i.e.when @a <= 0</code></pre>
+      <h5>CSS控制</h5>
+      <p>
+        流程控制也可以用在css选择器上，其实就是一种声明并立即调用一个mixin的语法糖，类似js匿名函数
+      </p>
+      <pre><code class="language-less">//1.5之前的版本需要这样做
+.my-optional-style() when (@my-option = true) {
+button {
+color: white;
+}
+}
+.my-optional-style();
+//现在就可以这样了：
+button when (@my-option = true) {
+color: white;
+}
+
+//还可以将这个与&amp;混合使用，以组织多个流程控制。
+&amp; when (@my-option = true) {
+button {
+color: white;
+}
+a {
+color: blue;
+}
+}</code></pre>
+      <h5>循环</h5>
+      <p>
+        Less中一个mixin可以调用自身，递归函数，结合条件表达式和模式匹配可以创建循环结构
+      </p>
+      <pre><code class="language-less">.loop(@counter) when (@counter > 0) {
+.loop((@counter - 1));    // next iteration
+width: (10px * @counter); // code for each iteration
+}
+
+div {
+.loop(5); // launch the loop
+}</code></pre>编译为: <pre><code class="language-css">div {
+width: 10px;
+width: 20px;
+width: 30px;
+width: 40px;
+width: 50px;
+}</code></pre>使用递归循环的一个例子是用css生成柵格系统: <pre><code class="language-less">.generate-columns(4);
+
+.generate-columns(@n, @i: 1) when (@i =< @n) {
+.column-@{i} {
+width: (@i * 100% / @n);
+}
+.generate-columns(@n, (@i + 1));
+}</code></pre>编译为: <pre><code class="language-css">.column-1 {
+width: 25%;
+}
+.column-2 {
+width: 50%;
+}
+.column-3 {
+width: 75%;
+}
+.column-4 {
+width: 100%;
+}</code></pre>
+    </li>
+    <li>
+      <h4>合并</h4>
+      <p>
+        合并特性允许将多处定义的属性值用逗号或空格聚集到一起，形成一个属性列表。
+        这个特定对background和transform这样的属性很有用。
+      </p>
+      <ol>
+        <li>
+          <h5>逗号</h5>
+          <pre><code class="language-less">.mixin() {
+box-shadow+: inset 0 0 10px #555;
+}
+.myclass {
+.mixin();
+box-shadow+: 0 0 20px black;
+}</code></pre>编译为: <pre><code class="language-css">.myclass {
+box-shadow: inset 0 0 10px #555, 0 0 20px black;
+}</code></pre>
+        </li>
+        <li>
+          <h5>空格</h5>
+          <pre><code class="language-less">.mixin() {
+transform+_: scale(2);
+}
+.myclass {
+.mixin();
+transform+_: rotate(15deg);
+}</code></pre>编译为: <pre><code class="language-css">.myclass {
+transform: scale(2) rotate(15deg);
+}</code></pre>
+        </li>
+      </ol>
+      <p>
+        To avoid any unintentional joins, merge requires an explicit + or +_ flag on
+        each join pending declaration.
+      </p>
+    </li>
+    <li>
+      <h4>父选择器</h4>
+      <p>
+        &amp;符号代表嵌套规则上的父选择器，在处理现存选择器的伪类或修改类的时候很有用
+      </p>
+      <pre><code class="language-less">a {
+color: blue;
+&amp;:hover {
+color: green;
+}
+}</code></pre>编译为: <pre><code class="language-css">a {
+color: blue;
+}
+
+a:hover {
+color: green;
+}</code></pre>注意咯，如果没有&amp;符号，将会输出<code class="language-css">a :hover</code>
+(<code class="language-css">a:hover</code>是不一样的)。
+      <h5>重复选择器</h5>
+      <pre><code class="language-less">.button {
+&amp;-ok {
+background-image: url("ok.png");
+}
+&amp;-cancel {
+background-image: url("cancel.png");
+}
+
+&amp;-custom {
+background-image: url("custom.png");
+}
+}</code></pre>编译为: <pre><code class="language-css">.button-ok {
+background-image: url("ok.png");
+}
+.button-cancel {
+background-image: url("cancel.png");
+}
+.button-custom {
+background-image: url("custom.png");
+}</code></pre>
+      <h5>多个&amp;</h5>
+      <pre><code class="language-less">.link {
+&amp; + &amp; {
+color: red;
+}
+
+&amp; &amp; {
+color: green;
+}
+
+&amp;&amp; {
+color: blue;
+}
+
+&amp;, &amp;ish {
+color: cyan;
+}
+}</code></pre>编译为: <pre><code class="language-css">.link + .link {
+color: red;
+}
+.link .link {
+color: green;
+}
+.link.link {
+color: blue;
+}
+.link, .linkish {
+color: cyan;
+}</code></pre>注意&amp;会呈现所有当前的父选择器，而不是最近的父选择器: <pre><code class="language-less">.grand {
+.parent {
+&amp; > &amp; {
+color: red;
+}
+
+&amp; &amp; {
+color: green;
+}
+
+&amp;&amp; {
+color: blue;
+}
+
+&amp;, &amp;ish {
+color: cyan;
+}
+}
+}</code></pre>编译为: <pre><code class="language-css">.grand .parent > .grand .parent {
+color: red;
+}
+.grand .parent .grand .parent {
+color: green;
+}
+.grand .parent.grand .parent {
+color: blue;
+}
+.grand .parent,
+.grand .parentish {
+color: cyan;
+}</code></pre>
+      <h5>改变选择器顺序</h5>
+      <p>
+        通过在&amp;前面添加前缀选择器，可以改变选择器顺序。
+        For example, when using Modernizr, you might want to specify different rules
+        based on supported features:
+      </p>
+      <pre><code class="language-less">.header {
+.menu {
+border-radius: 5px;
+.no-borderradius &amp; {
+background-image: url('images/button-background.png');
+}
+}
+}</code></pre>编译为: <pre><code class="language-css">.header .menu {
+border-radius: 5px;
+}
+.no-borderradius .header .menu {
+background-image: url('images/button-background.png');
+}</code></pre>
+      <h5>组合扩展</h5>
+      <p>
+        &smp;可用于生成用逗号分开的选择器列表中每一种可能的选择器组合
+      </p>
+      <pre><code class="language-less">p, a, ul, li {
+border-top: 2px dotted #366;
+&amp; + &amp; {
+border-top: 0;
+}
+}</code></pre>这里可编译生成16种组合结果: <pre><code class="language-css">p,
+a,
+ul,
+li {
+border-top: 2px dotted #366;
+}
+p + p,
+p + a,
+p + ul,
+p + li,
+a + p,
+a + a,
+a + ul,
+a + li,
+ul + p,
+ul + a,
+ul + ul,
+ul + li,
+li + p,
+li + a,
+li + ul,
+li + li {
+border-top: 0;
+}</code></pre>
+    </li>
+  </ol>
+</li>

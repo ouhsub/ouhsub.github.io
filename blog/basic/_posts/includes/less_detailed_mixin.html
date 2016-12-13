@@ -1,0 +1,535 @@
+        <li>
+          <h3>Mixin混入</h3>
+          <p>
+            mixin即混入混合，本质上就是对代码段的复制，将源选择器的规则复制到目标选择器的规则列表中。
+            也可以将mixin看作一种最终返回规则列表的函数。
+          </p>
+          <p>
+            作为混入源的选择器既可以是类选择器也可以是ID选择器:
+            <pre><code class="language-less">.a, #b {
+  color: red;
+}
+.mixin-class {
+  .a();
+}
+.mixin-id {
+  #b();
+}</code></pre>
+            这段代码将被编译为:
+            <pre><code class="language-css">.a, #b {
+  color: red;
+}
+.mixin-class {
+  color: red;
+}
+.mixin-id {
+  color: red;
+}</code></pre>当使用mixin的时候，括号是可选的。<code class="language-less">.a();</code>
+            与使用<code class="language-less">.a;</code>编译结果是一样的。
+          </p>
+          <ol>
+            <li>
+              <h4>mixin的一些概念</h4>
+              <ul>
+                <li>
+                  <h5>静默mixin</h5>
+                  <p>
+                    不会被编译输出的mixin就是静默mixin。mixin后面放个括号就是了:
+                    <pre><code class="language-less">.my-mixin {
+  color: black;
+}
+.my-other-mixin() {
+  background: white;
+}
+.class {
+  .my-mixin;
+  .my-other-mixin;
+}</code></pre>这段代码编译为: <pre><code class="language-css">.my-mixin {
+  color: black;
+}
+.class {
+  color: black;
+  background: white;
+}</code></pre>
+                  </p>
+                </li>
+                <li>
+                  <h5>命名空间</h5>
+                  <p>
+                    mixin不仅可以包含属性规则列表，还可以包含选择器:
+                    <pre><code class="language-less">.my-hover-mixin() {
+  &amp;:hover {
+    border: 1px solid red;
+  }
+}
+button {
+  .my-hover-mixin();
+}</code></pre>编译为: <pre><code class="language-css">button:hover {
+  border: 1px solid red;
+}</code></pre>这样，通过堆砌ID和类选择器就可以将属性混入复杂的选择器: <pre><code class="language-less">#outer {
+  .inner {
+    color: red;
+  }
+}
+.c {
+  #outer > .inner;
+}</code></pre>这里"&gt;"和空格都是可选的，下列表达式输出结果都一样: <pre><code class="language-less">#outer > .inner;
+#outer > .inner();
+#outer .inner;
+#outer .inner();
+#outer.inner;
+#outer.inner();</code></pre>将mixin放置在一个id选择器这样就可以确保他不会与其他lib冲突，这就是<strong>命名空间</strong>:
+<pre><code class="language-less">#my-library {
+  .my-mixin() {
+    color: black;
+  }
+}
+// which can be used like this
+.class {
+  #my-library > .my-mixin();
+}</code></pre>
+                  </p>
+                </li>
+                <li>
+                  <h5>有条件的命名空间</h5>
+                  <p>
+                    如果命名空间有条件，那么只有在满足条件的时候才能调用mixin。
+                    加诸命名空间上的条件与放在mixin内的条件是一样的:
+                    <pre><code class="language-less">#namespace when (@mode=huge) {
+  .mixin() { /* */ }
+}
+
+#namespace {
+  .mixin() when (@mode=huge) { /* */ }
+}</code></pre>default()函数被假定在所有嵌套的命名空间和mixin中有相同的值。
+下面的mixin永远不会被执行: <pre><code class="language-less">#sp_1 when (default()) {
+  #sp_2 when (default()) {
+    .mixin() when not(default()) { /* */ }
+  }
+}</code></pre>
+                  </p>
+                </li>
+                <li>
+                  <h5>!important关键字</h5>
+                  <p>
+                    mixin后面使用!important关键字，会生成的所有属性都带有!important关键字:
+                    <pre><code class="language-less">.foo (@bg: #f5f5f5, @color: #900) {
+  background: @bg;
+  color: @color;
+}
+.unimportant {
+  .foo();
+}
+.important {
+  .foo() !important;
+}</code></pre>编译结果: <pre><code class="language-css">.unimportant {
+  background: #f5f5f5;
+  color: #900;
+}
+.important {
+  background: #f5f5f5 !important;
+  color: #900 !important;
+}</code></pre>
+                  </p>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <h4>带参数的mixin</h4>
+              <p>
+                minxin可以接受参数，就是调用mixin的时候向选择器传递的变量。
+                <pre><code class="language-less">.border-radius(@radius) {
+  -webkit-border-radius: @radius;
+     -moz-border-radius: @radius;
+          border-radius: @radius;
+}
+
+#header {
+  .border-radius(4px);
+}
+.button {
+  .border-radius(6px);
+}</code></pre>
+              </p>
+              <ul>
+                <li>
+                  <h5>参数默认值</h5>
+                  <p>
+                    带参数的mixin可以为参数定义默认值: <pre><code class="language-less">.border-radius(@radius: 5px) {
+  -webkit-border-radius: @radius;
+     -moz-border-radius: @radius;
+          border-radius: @radius;
+}
+
+#header {
+  .border-radius;
+}</code></pre>
+                  </p>
+                </li>
+                <li>
+                  <h5>不带参数的带参mixin</h5>
+                  <p>
+                    这名字看着挺绕口，实际上就是静默mixin，就是带了括号的mixin。
+                    <pre><code class=“language-less”>.wrap() {
+  text-wrap: wrap;
+  white-space: -moz-pre-wrap;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+pre { .wrap }</code></pre>
+                  </p>
+                </li>
+                <li>
+                  <h5>多参mixin</h5>
+                  <p>
+                    参数可以用分号或逗号分割，推荐使用分号，因为逗号有两种用法: 参数分隔，
+                    css属性列表分隔。使用逗号的话就不能传递属性列表作为参数了，另一方面，
+                    如果编译器在参数列表中发现了至少一个分号，它会假设参数是用分号分隔的，
+                    而所有的逗号都是属于css列表。
+                  </p>
+                  <ol>
+                    <li>两个参数，并且每个都是用逗号分隔的css值列表: <code class="language-less">.name(1, 2, 3; something, else)</code></li>
+                    <li>三个参数，每个都是数字 <code class="language-less">.name(1, 2, 3)</code></li>
+                    <li>使用占位分号，创建之包含一个css值列表的参数的mixin: <code class="language-less">.name(1, 2, 3;)</code></li>
+                    <li>逗号分隔默认值: <code class="language-less">.name(@param1: red, blue;)</code></li>
+                  </ol>
+                  <p>
+                    定义多个有相同名称或参数数量的mixin是合法的。
+                    Less will use properties of all that can apply.
+                    If you used the mixin with one parameter e.g. `.mixin(green);`,
+                    then properties of all mixins with exactly one mandatory parameter will be used:
+                  </p>
+                  <pre><code class="language-less">.mixin(@color) {
+  color-1: @color;
+}
+.mixin(@color; @padding: 2) {
+  color-2: @color;
+  padding-2: @padding;
+}
+.mixin(@color; @padding; @margin: 2) {
+  color-3: @color;
+  padding-3: @padding;
+  margin: @margin @margin @margin @margin;
+}
+.some .selector div {
+  .mixin(#008000);
+}</code></pre>编译为: <pre><code class="language-css">.some .selector div {
+  color-1: #008000;
+  color-2: #008000;
+  padding-2: 2;
+}</code></pre>
+                </li>
+                <li>
+                  <h5>命名参数</h5>
+                  <p>除了按位置传递参数还可以按参数名传递。那就不必用特定顺序来传递参数了: </p>
+                  <pre><code class="language-less">.mixin(@color: black; @margin: 10px; @padding: 20px) {
+  color: @color;
+  margin: @margin;
+  padding: @padding;
+}
+.class1 {
+  .mixin(@margin: 20px; @color: #33acfe);
+}
+.class2 {
+  .mixin(#efca44; @padding: 40px);
+}</code></pre>编译为: <pre><code class="language-less">.class1 {
+  color: #33acfe;
+  margin: 20px;
+  padding: 20px;
+}
+.class2 {
+  color: #efca44;
+  margin: 10px;
+  padding: 40px;
+}</code></pre>
+                </li>
+                <li>
+                  <h5>@arguments变量</h5>
+                  <p>@arguments在minxin中是一个特殊的变量，它包含着所有的参数: </p>
+                  <pre><code class="language-less">.box-shadow(@x: 0; @y: 0; @blur: 1px; @color: #000) {
+  -webkit-box-shadow: @arguments;
+     -moz-box-shadow: @arguments;
+          box-shadow: @arguments;
+}
+.big-block {
+  .box-shadow(2px; 5px);
+}</code></pre>编译为: <pre><code class="language-css">.big-block {
+  -webkit-box-shadow: 2px 5px 1px #000;
+     -moz-box-shadow: 2px 5px 1px #000;
+          box-shadow: 2px 5px 1px #000;
+}</code></pre>
+                </li>
+                <li>
+                  <h5>高级参数和@reset变量</h5>
+                  <p>可以使用...表示不定数量的参数，命名参数后面带...则可以用@rest表示: </p>
+                  <pre><code class="language-less">.mixin(...) {        // matches 0-N arguments
+.mixin() {           // matches exactly 0 arguments
+.mixin(@a: 1) {      // matches 0-1 arguments
+.mixin(@a: 1; ...) { // matches 0-N arguments
+.mixin(@a; ...) {    // matches 1-N arguments
+//此外
+.mixin(@a; @rest...) {
+   // @rest is bound to arguments after @a
+   // @arguments is bound to all arguments
+}</code></pre>
+                </li>
+                <li>
+                  <h5>模式匹配</h5>
+                  <p>可以根据传入的参数改变mixin的行为，要基于变量@switch的值改变mixin的表现，可以这样定义: </p>
+                  <pre><code class="language-less">.mixin(dark; @color) {
+  color: darken(@color, 10%);
+}
+.mixin(light; @color) {
+  color: lighten(@color, 10%);
+}
+.mixin(@_; @color) {
+  display: block;
+}
+
+@switch: light;
+
+.class {
+  .mixin(@switch; #888);
+}</code></pre>编译为: <pre><code class="language-less">.class {
+  color: #a2a2a2;
+  display: block;
+}</code></pre>
+                  <p>
+                    传递light的时候，就输出亮色，传递dark则输出暗色。
+                    究竟发生了什么？
+                    <ol>
+                      <li>第一个mixin没有匹配，因为它接受dark作为第一个参数</li>
+                      <li>第二个minxin匹配到了</li>
+                      <li>第三个minxin也匹配到了，因为它接受任意的参数</li>
+                    </ol>
+                    这里只有匹配的mixin才会被调用，变量可以匹配绑定到任意值，否则只能匹配自身。
+                  </p>
+                  <p>
+                    还可以通过参数的数量匹配:
+                    <pre><code class="language-less">.mixin(@a) {
+  color: @a;
+}
+.mixin(@a; @b) {
+  color: fade(@a; @b);
+}</code></pre>
+                  </p>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <h4>作为函数的mixin</h4>
+              <p>
+                从mixin中返回变量或mixin，mixin中定义的变量或mixin可以在调用者的作用域中使用。
+                只有一个例外：如果调用者包含一个与mixin中同名的变量(包括从其他mixin中得到的)
+                ，那就不会复制这个变量。只有在调用者本地作用域中定义的变量才受保护。
+                父作用域中继承的变量也可以被覆写。
+              </p>
+              <pre><code class="language-less">.mixin() {
+  @width:  100%;
+  @height: 200px;
+}
+
+.caller {
+  .mixin();
+  width:  @width;
+  height: @height;
+}</code></pre>编译为: <pre><code class="language-css">.caller {
+  width:  100%;
+  height: 200px;
+}</code></pre>既然mixin中定义的变量就像返回值一样，那就允许创建像函数一样的mixin了:
+              <pre><code class="language-less">.average(@x, @y) {
+  @average: ((@x + @y) / 2);
+}
+
+div {
+  .average(16px, 50px); // "call" the mixin
+  padding: @average;    // use its "return" value
+}</code></pre>调用者本地作用域中定义的变量不能被覆写，但是，调用者父作用域中的变量是可以被覆写的:
+              <pre><code class="language-less">.mixin() {
+  @size: in-mixin;
+  @definedOnlyInMixin: in-mixin;
+}
+
+.class {
+  margin: @size @definedOnlyInMixin;
+  .mixin();
+}
+
+@size:</code></pre>编译为: <pre><code class="language-css">.class {
+  margin: in-mixin in-mixin;
+}</code></pre>mixin中定义的mixin也像返回值一样: <pre><code class="language-less">.unlock(@value) { // outer mixin
+  .doSomething() { // nested mixin
+    declaration: @value;
+  }
+}
+
+#namespace {
+  .unlock(5); // unlock doSomething mixin
+  .doSomething(); //nested mixin was copied here and is usable
+}</code></pre>编译为: <pre><code class="language-css">#namespace {
+  declaration: 5;
+}</code></pre>
+            </li>
+            <li>
+              <h4>向mixin中传递规则列表</h4>
+              <p>
+                <strong>分离规则</strong>就是一组css属性、嵌套规则、
+                媒体声明或其他包含在一个变量中的东西。
+                可以将其包含在一个规则列表或其他结构中，然后所有属性将被拷贝到那里。
+                也可將其作mixin的参数传递。
+              </p>
+              <pre><code class="language-less">// declare detached ruleset
+@detached-ruleset: { background: red; };
+
+// use detached ruleset
+.top {
+    @detached-ruleset();
+}</code></pre>编译为: <pre><code class="language-css">.top {
+  background: red;
+}</code></pre>
+              <p>
+                调用分离规则必须带元括号。否则不能正常工作。
+                在抽象出浏览器hack类名或媒体查询规则的时候这个分离规则是很有用的。
+                可以将规则列表传递给mixin以包裹内容。
+              </p>
+              <pre><code class="language-less">.desktop-and-old-ie(@rules) {
+  @media screen and (min-width: 1200px) { @rules(); }
+  html.lt-ie9 &                         { @rules(); }
+}
+
+header {
+  background-color: blue;
+
+  .desktop-and-old-ie({
+    background-color: red;
+  });
+}</code></pre>这里的 desktop-and-old-ie 混入定义了一个媒体查询和根类，用以包裹一段代码。编译为:
+              <pre><code class="language-css">header {
+  background-color: blue;
+}
+@media screen and (min-width: 1200px) {
+  header {
+    background-color: red;
+  }
+}
+html.lt-ie9 header {
+  background-color: red;
+}</code></pre>此时，就可以将分离规则赋值给一个变量，或者传递个mixin了: <pre><code class="language-less">@my-ruleset: {
+    .my-selector {
+      background-color: black;
+    }
+  };
+//还可以充分利用媒体查询的优势进行构建：
+@my-ruleset: {
+    .my-selector {
+      @media tv {
+        background-color: black;
+      }
+    }
+  };
+@media (orientation:portrait) {
+    @my-ruleset();
+}</code></pre>编译为: <pre><code class="language-css">@media (orientation: portrait) and tv {
+  .my-selector {
+    background-color: black;
+  }
+}</code></pre>一个分离规则可以像mixin一样返回(unlock)其中的mixin到调用的地方:
+              <pre><code class="language-less">// detached ruleset with a mixin
+@detached-ruleset: {
+    .mixin() {
+        color:blue;
+    }
+};
+// call detached ruleset
+.caller {
+    @detached-ruleset();
+    .mixin();
+}</code></pre>编译为: <pre><code class="language-css">.caller {
+  color: blue;
+}</code></pre>私有变量: <pre><code class="language-less">@detached-ruleset: {
+    @color:blue; // this variable is private
+};
+.caller {
+    color: @color; // syntax error
+}</code></pre>
+              <h5>作用域</h5>
+              <p>
+                一个分离规则可以使用它被调用和被定义时候的所有变量及mixin。
+                换句话说，不管是定义时的作用域还是调用时的作用域都是可用的。
+                如果定义时的作用域和调用是的作用域包含相同的变量或mixin，那么优先使用定义时的作用域。
+                声明作用域就是定义分离规则时候的作用域。
+                将分离规则从一个变量复制到另一个不会改变它的作用域。
+                规则不会因为被复制就获取新的作用域。
+                The ruleset does not gain access to new scopes just by being referenced there.
+                最后，一个分离规则可以在调用的时候获取新的作用域。
+              </p>
+              <p>
+                Definition and Caller Scope Visibility
+                一个分离规则，可以意识到调用者的变量和mixin。
+              </p>
+              <pre><code class="language-less">@detached-ruleset: {
+  caller-variable: @caller-variable; // 这里尚未定义变量
+  .caller-mixin(); // 这里尚未定义mixin
+};
+
+selector {
+  // 调用分离规则
+  @detached-ruleset();
+
+  // 定义分离规则中需要的变量和mixin
+  @caller-variable: value;
+  .caller-mixin() {
+    variable: declaration;
+  }
+}</code></pre>编译为: <pre><code class="language-css">selector {
+  caller-variable: value;
+  variable: declaration;
+}</code></pre>声明作用域中的变量和mixin比调用作用域中的变量和mixin有优先级:
+              <pre><code class="language-less">@variable: global;
+@detached-ruleset: {
+  // 这里可以使用全局变量哦
+  variable: @variable;
+};
+
+selector {
+  @detached-ruleset();
+  @variable: value; // 调用者里定义的变量，将被忽略。
+}</code></pre>编译为: <pre><code class="language-css">selector {
+  variable: global;
+}</code></pre>引用不会改变分离规则的作用域: <pre><code class="language-less">@detached-1: { scope-detached: @one @two; };
+.one {
+  @one: visible;
+  .two {
+    @detached-2: @detached-1; // 复制/重命名分离规则
+    @two: visible; // 分离规则看不到这里的变量。
+  }
+}
+
+.use-place {
+  .one > .two();
+  @detached-2();
+}</code></pre>这里会抛出错误: <code class="language-bash">ERROR 1:32 The variable "@one" was not declared.</code>
+              <p>
+                调用可以改变分离规则的作用域:
+              </p>
+              <pre><code class="language-less">#space {
+  .importer-1() {
+    @detached: { scope-detached: @variable; }; // define detached ruleset
+  }
+}
+
+.importer-2() {
+  @variable: value; // unlocked detached ruleset CAN see this variable
+  #space > .importer-1(); // unlock/import detached ruleset
+}
+
+.use-place {
+  .importer-2(); // unlock/import detached ruleset second time
+   @detached();
+}</code></pre>编译为: <pre><code class="language-css">.use-place {
+  scope-detached: value;
+}</code></pre>
+            </li>
+          </ol>
+        </li>
