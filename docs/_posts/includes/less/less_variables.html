@@ -1,9 +1,11 @@
-        <li>
-          <h3>Variables变量</h3>
-          <p>
-            CSS样式表中大部分属性的值或格式都是一样的，而且在样式表中同一个值被反复调用是很常见的。
-            使用变量可以方便地在一个位置集中管理这些可能被多次调用的值。比如bootstrap中全局性的颜色:
-            <pre><code class=“language-less”>//variables.less
+<div class="chapter-item">
+  <a name="variables变量"></a>
+  <h2 class="chapter-title">variables变量</h2>
+  <article>
+    <p>
+      CSS样式表中大部分属性的值或格式都是一样的，而且在样式表中同一个值被反复调用是很常见的。
+      使用变量可以方便地在一个位置集中管理这些可能被多次调用的值。比如bootstrap中全局性的颜色:
+      <pre><code class=“language-less”>//variables.less
 //== Colors
 //
 //## Gray and brand colors for use across Bootstrap.
@@ -20,8 +22,8 @@
 @brand-info:            #5bc0de;
 @brand-warning:         #f0ad4e;
 @brand-danger:          #d9534f;</code></pre>
-            这里定义一组变量便于集中管理各种DOM的zIndex值:
-            <pre><code class="language-less">//variables.less
+      这里定义一组变量便于集中管理各种DOM的zIndex值:
+      <pre><code class="language-less">//variables.less
 //-- Z-index master list
 //
 // Warning: Avoid customizing these values. They're used for a bird's eye view
@@ -36,10 +38,10 @@
 @zindex-navbar-fixed:      1030;
 @zindex-modal-background:  1040;
 @zindex-modal:             1050;</code></pre>
-          </p>
-          <p>
-            除了在属性值中使用变量，还可以将变量作为插值用于选择器名，属性名，URLs和@import声明等等。
-            <pre><code class="language-less">//variables.less
+    </p>
+    <p>
+      除了在属性值中使用变量，还可以将变量作为插值用于选择器名，属性名，URLs和@import声明等等。
+      <pre><code class="language-less">//variables.less
 //== Iconography
 //
 //## Specify custom location and filename of the included Glyphicons icon font.
@@ -51,7 +53,7 @@
 @icon-font-name:          "glyphicons-halflings-regular";
 //** Element ID within SVG icon file.
 @icon-font-svg-id:        "glyphicons_halflingsregular";</code></pre>
-            作为插值的变量需要这样调用: <pre><code class="language-less">//glyphicons.less
+      作为插值的变量需要这样调用: <pre><code class="language-less">//glyphicons.less
 // Import the fonts
 @font-face {
   font-family: 'Glyphicons Halflings';
@@ -62,13 +64,13 @@
        url('@{icon-font-path}@{icon-font-name}.ttf') format('truetype'),
        url('@{icon-font-path}@{icon-font-name}.svg#@{icon-font-svg-id}') format('svg');
 }</code></pre>
-          </p>
-          <h4>惰怠加载</h4>
-          <p>
-            变量是惰怠加载的，可以在使用变量之后再定义变量。如果定义了一个变量两次，
-            那么从当前作用域向上查找，最后一次声明的值才会被使用。
-            这和css是相似的，后面定义的属性值会覆写前面定义的属性。例如:
-            <pre><code class="language-less">@var: 0;
+    </p>
+    <h3>惰怠加载</h3>
+    <p>
+      变量是惰怠加载的，可以在使用变量之后再定义变量。less的变量实际上就是常量。
+      如果定义了一个变量两次，那么从当前作用域向上查找，最后一次声明的值才会被使用。
+      这和css是相似的，后面定义的属性值会覆写前面定义的属性。例如:
+      <pre><code class="language-less">@var: 0;
 .class {
   @var: 1;
   .brass {
@@ -78,24 +80,25 @@
   }
   one: @var;
 }</code></pre>
-            编译结果为:
-            <pre><code class="language-css">.class {
+      编译结果为:
+      <pre><code class="language-css">.class {
   one: 1;
 }
 .class .brass {
   three: 3;
 }</code></pre>
-          </p>
-          <p>
-            再来看一个默认变量的例子:
-            <pre><code class="language-less">// library
+    </p>
+    <p>
+      再来看一个默认变量的例子:
+      <pre><code class="language-less">// library
 @base-color: green;
 @dark-color: darken(@base-color, 10%);
 
 // use of library
 @import "library.less";
 @base-color: red;</code></pre>
-            因为变量的惰怠加载，<code class="language-less">@base-color</code>变成了红色，
-            而<code class="language-less">@dark-color</code>则变成了暗红色。
-          </p>
-        </li>
+      因为变量的惰怠加载，<code class="language-less">@base-color</code>变成了红色，
+      而<code class="language-less">@dark-color</code>则变成了暗红色。
+    </p>
+  </article>
+</div>

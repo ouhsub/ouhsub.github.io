@@ -1,9 +1,12 @@
 ---
 layout: blog
-title: Less基础详解
-excerpt: Less是一种CSS预编译语言，在CSS的语法基础之上，引入了变量，Mixin，运算以及函数等功能，大大简化了CSS的编写，并且降低了CSS的维护成本。借助Less可以更便捷的进行Web开发。
-tags: less
-chapters: [为什么要使用Less, Less语法精要, 怎样高效使用Less]
+title: CSS预编译语言——Less
+excerpt: >
+  作为一门标记性语言，CSS的语法相对简单，对使用者的要求较低，但同时也存在着一些问题: CSS需要书
+  写大量看似没有逻辑的代码，不方便维护及扩展，不利于复用，很难写出组织良好且易于维护的CSS代码。
+  CSS预编译语言就是在这样一种背景下产生的。
+tags: css less sass
+chapters: [为什么要使用CSS预编译语言, Less语法精要, 怎样高效使用CSS预编译语言]
 scripts: [prism.default.basic]
 styles: [prism.default.basic]
 ---
@@ -12,16 +15,21 @@ styles: [prism.default.basic]
 <hr>
 <div class="blog-body">
   <div class="chapter-item">
-    <a name="为什么要使用Less"></a>
-    <h2 class="chapter-title">为什么要使用Less</h2>
+    <a name="为什么要使用CSS预编译语言"></a>
+    <h2 class="chapter-title">为什么要使用CSS预编译语言</h2>
     <article>
       <p>
-        作为一门标记性语言，CSS的语法相对简单，对使用者的要求较低，但同时也存在着一些问题: CSS需要书
-        写大量看似没有逻辑的代码，不方便维护及扩展，不利于复用，很难写出组织良好且易于维护的CSS代码。
+        CSS预编译语言是一种新的语言，其基本思想是，用一种专门的编程语言，
+        为CSS增加一些编程的特性，将CSS作为目标生成文件。
+        开发者使用这种语言进行编码工作，然后再编译成正常的CSS文件，以供项目使用。
       </p>
       <p>
-        Less在CSS的语法基础之上，引入了变量，Mixin，运算以及函数等功能，大大简化了CSS的编写，
-        并且降低了CSS的维护成本。借助Less可以更便捷的进行Web开发。
+        预编译语言在CSS的语法基础之上，引入了变量，Mixin，运算以及函数等功能，大大简化了CSS的编写，
+        并且降低了CSS的维护成本。借助CSS预编译语言可以更便捷的进行Web开发。
+      </p>
+      <p>
+        目前使用较广泛的CSS预编译语言主要有Sass、Less和Stylus等。其工作原理基本上是一样的，
+        这里暂且不论孰优孰劣，仅以Less为例讨论下CSS预编译语言的使用。
       </p>
     </article>
   </div>
@@ -29,21 +37,104 @@ styles: [prism.default.basic]
     <a name="Less语法精要"></a>
     <h2 class="chapter-title">Less语法精要</h2>
     <article>
-      <ul>
-        {% include_relative includes/less_detailed_import.html %}
-        {% include_relative includes/less_detailed_variables.html %}
-        {% include_relative includes/less_detailed_mixin.html %}
-        {% include_relative includes/less_detailed_extend.html %}
-        {% include_relative includes/less_detailed_grands.html %}
-        {% include_relative includes/less_detailed_function.html %}
-      </ul>
+      <p>
+        Less作为CSS的预编译语言，其所有的特性都服务于一个目的: 书写高质量的样式表文件。
+      </p>
+      <p>
+        一个高质量的样式表文件应该是怎样的？
+      </p>
+      <p>
+        首先，应该结构清晰，组织明确。
+        良好的结构即方便于书写代码，又能提高代码可读性。
+        CSS文件中，代码的结构只能通过注释和排版(CSS原生的@import指令就不考虑了)进行优化，
+        这就像一个只有p标签的HTML文件，谈何结构。
+        而在Less中，则可以通过@import指令，嵌套，命名空间等对样式表文件进行结构化、模块化的构建。
+      </p>
+      <p>
+        其次，应该便于维护。
+        一个可维护性高的样式表应该是易读、易改、可复用、可扩展的。
+        Less中，mixins可谓是代码复用的利器，通过带参数的mixin及流程控制更能实现灵活的代码复用及扩展。
+        这在CSS中是很难实现的。
+      </p>
+      <ol>
+        <li>
+          <h3>通过@import声明组织文件结构</h3>
+          <h4>Less的@import与CSS原生@import指令不同</h4>
+          <p>
+            首先，也是最重要的一点，导入的动作是在编译过程中进行的，
+            而最后使用到项目中的是编译完成的CSS文件，
+            这就免去了大量web请求造成的性能问题(不推荐用Less文件代替CSS文件)，
+            从而可以毫无顾忌的利用@import指令的优势，按需分割一大坨的样式表到不同的文件、文件夹中，
+            构建良好的样式表结构。
+          </p>
+          <p>
+            其次，Less的导入指令通过传递不同的选项还可以实现灵活的编译表现。
+          </p>
+          <h3>bootstrap中的@import</h3>
+          <p>
+            twbs/bootstrap(3.3.7)的Less源文件中，有两个文件bootstrap.less与
+            mixins.less中包含的全部都是 @import声明，很明显，这两个文件就是用来组织项目结构的。
+            <pre><code class="language-less">// part of bootstrap.less
+// Core variables and mixins  核心变量和mixin
+@import "variables.less";      //变量文件
+@import "mixins.less";         //mixin文件
+
+// Reset and dependencies  重置和依赖
+@import "normalize.less";     //页面初始化
+@import "print.less";         //打印媒体
+@import "glyphicons.less";    //图标字体
+
+// Core CSS  核心CSS
+@import "scaffolding.less";   //脚手架样式
+@import "type.less";          //排版样式
+@import "code.less";          //代码样式
+@import "grid.less";          //柵格样式
+@import "tables.less";        //表格样式
+@import "forms.less";         //表单样式
+@import "buttons.less";       //按钮样式
+
+// Components  组件
+@import "component-animations.less";
+@import "dropdowns.less";
+@import "button-groups.less";
+@import "input-groups.less";
+@import "navs.less";
+//...</code></pre>
+          </p>
+        </li>
+        <li>
+          <h3>利用变量集中管理样式表的属性</h3>
+          <p>
+
+          </p>
+        </li>
+        <li>
+          <h3>基于mixin的代码复用</h3>
+          <p>
+            mixin就是一种动作，将源选择器中的规则<strong>复制并混合</strong>到目标选择器中。
+            根据mixin源是否会被编译输出，mixin可以简单的分为两种，一种是混入现存样式的选择器中的规则，
+            其实就是一个简单的复制，混入源也会被编译输出(其实这种情况下并不适合使用mixin,
+            简单的复制混入源的规则到混入目标中，只会使最终生成的代码冗余，而使用extend则
+            只是简单的将目标选择器添加到混入源的选择器列表中，显然是更好的选择);
+            另一种是混入专门返回样式规则的mixin函数的返回规则，这类mixin源不会被编译输出。
+          </p>
+          <h4>mixin函数</h4>
+          <p>
+            
+          </p>
+          <h4>mixin控制语句</h4>
+          <p>
+
+          </p>
+        </li>
+      </ol>
     </article>
   </div>
   <div class="chapter-item">
-    <a name="怎样高效使用Less"></a>
-    <h2 class="chapter-title">怎样高效使用Less</h2>
+    <a name="怎样高效使用CSS预编译语言"></a>
+    <h2 class="chapter-title">怎样高效使用CSS预编译语言</h2>
     <article>
-
+      在我看来它更像是一种代码管理工具。
     </article>
   </div>
 </div>

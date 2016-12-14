@@ -1,0 +1,186 @@
+<div class="chapter-item">
+  <a name="import导入文件"></a>
+  <h2 class="chapter-title">@import导入文件</h2>
+  <article>
+    <ol>
+      <li>
+        <h3>声明位置</h3>
+        <p>
+          CSS中导入文件必须在所有其他规则之前，而Less则不用在意将@import声明放在哪里。
+        </p>
+        <pre><code class="language-less">.foo {
+  background: #900;
+}
+@import "this-is-valid.less";</code></pre>
+      </li>
+      <li>
+        <h3>性能考量</h3>
+        <p>
+          对于CSS文件，与 &lt;link&gt; 标签相比，@import 指令要慢很多，不光增加了额外的请求次数，还会导致不可预料的问题。
+        </p>
+        <p>
+          而对于Less文件，使用@import指令并不会增加请求，因为所有的import动作(除了直接编译为导入指令的导入指令外)都在编译文件的过程中处理完成了。
+        </p>
+      </li>
+      <li>
+        <h3>文件扩展名</h3>
+        <p>
+          Less对待不同扩展名的文件处理方式也不一样。
+          <ul style="list-style: circle">
+            <li>
+              如果文件有.css扩展名，那就被作为一个CSS文件导入，并且@import声明原样保留在编译结果中。
+            </li>
+            <li>
+              如果是其他扩展名，将被作为less文件被导入。
+            </li>
+            <li>
+              如果没有扩展名，则将被作为less文件导入。
+            </li>
+          </ul>
+          <pre><code class="language-less">@import "foo";      // foo.less is imported
+@import "foo.less"; // foo.less is imported
+@import "foo.php";  // foo.php imported as a less file
+@import "foo.css";  // statement left in place, as-is</code></pre>
+        </p>
+      </li>
+      <li>
+        <h3>导入选项</h3>
+        <strong>语法: </strong><code class="language-less">@import (keyword) "filename";</code>
+        <ul style="list-style: circle">
+          <li>
+            <h4>reference</h4>
+            <p>
+              使用@import (reference)导入外部文件，但不将样式规则编译输出，除非被应用。
+              <pre><code class="language-less">@import (reference) "foo.less";</code></pre>
+            </p>
+          </li>
+          <li>
+            <h4>inline</h4>
+            <p>
+              当一个css文件不能被less编译时，可用这个选项直接将css文件放入合并文件中。
+              在编译结果中包含源文件，但是不编译它。
+              <pre><code class="language-less">@import (inline) "not-less-compatible.css";</code></pre>
+            </p>
+          </li>
+          <li>
+            <h4>less</h4>
+            <p>
+              无论文件扩展名是什么，都作为less文件导入。
+              <pre><code class="language-less">@import (less) "foo.css";</code></pre>
+            </p>
+          </li>
+          <li>
+            <h4>css</h4>
+            <p>
+              无论文件扩展名是什么，都作为css文件导入。
+              <pre><code class="language-less">@import (css) "foo.less";</code></pre>
+              导入声明将保持原样
+              <pre><code class="language-css">@import "foo.less";</code></pre>
+
+            </p>
+          </li>
+          <li>
+            <h4>once</h4>
+            <p>
+              只导入一次文件(默认行为)
+              <pre><code class="language-less">@import (once) "foo.less";
+@import (once) "foo.less"; // this statement will be ignored</code></pre>
+            </p>
+          </li>
+          <li>
+            <h4>multiple</h4>
+            <p>
+              多次引入文件
+              <pre><code class="language-less">// file: foo.less
+.a {
+  color: green;
+}
+// file: main.less
+@import (multiple) "foo.less";
+@import (multiple) "foo.less";</code></pre>
+                    编译为: <pre><code class="language-css">.a {
+  color: green;
+}
+.a {
+  color: green;
+}</code></pre>
+            </p>
+          </li>
+          <li>
+            <h4>optional</h4>
+            <p>
+              文件存在的时候就引入，如果文件不存在，less也不会抛出错误。
+            </p>
+          </li>
+        </ul>
+        <p>
+          一个@import指令可使用多个关键字,使用逗号分隔多个关键字。
+          <pre><code class="language-less">@import (optional, reference) "foo.less";</code></pre>
+        </p>
+      </li>
+      <li>
+        <h3>bootstrap与@import</h3>
+        <p>
+          twbs/bootstrap(3.3.7)的Less源文件中，有两个文件bootstrap.less与mixins.less中包含的全部都是
+          @import声明。
+        </p>
+        <pre><code class="language-less">//bootstrap.less
+// Core variables and mixins  核心变量和mixin
+@import "variables.less";      //变量文件
+@import "mixins.less";         //mixin文件
+
+// Reset and dependencies  重置和依赖
+@import "normalize.less";     //页面初始化
+@import "print.less";         //打印媒体
+@import "glyphicons.less";    //图标字体
+
+// Core CSS  核心CSS
+@import "scaffolding.less";   //脚手架样式
+@import "type.less";          //排版样式
+@import "code.less";          //代码样式
+@import "grid.less";          //柵格样式
+@import "tables.less";        //表格样式
+@import "forms.less";         //表单样式
+@import "buttons.less";       //按钮样式
+
+// Components  组件
+@import "component-animations.less";
+@import "dropdowns.less";
+@import "button-groups.less";
+@import "input-groups.less";
+@import "navs.less";
+@import "navbar.less";
+@import "breadcrumbs.less";
+@import "pagination.less";
+@import "pager.less";
+@import "labels.less";
+@import "badges.less";
+@import "jumbotron.less";
+@import "thumbnails.less";
+@import "alerts.less";
+@import "progress-bars.less";
+@import "media.less";
+@import "list-group.less";
+@import "panels.less";
+@import "responsive-embed.less";
+@import "wells.less";
+@import "close.less";
+
+// Components w/ JavaScript  js组件
+@import "modals.less";
+@import "tooltip.less";
+@import "popovers.less";
+@import "carousel.less";
+
+// Utility classes  公共类
+@import "utilities.less";
+@import "responsive-utilities.less";</code></pre>
+        <p>
+          简单的说，@import声明就是用来组织样式表结构的。不管样式表分成了多少个Less文件，
+          结构上分了多少层，最后编译输出、使用在网页中的样式表就只有一个(bootstrap.css)。
+          此外，考虑到样式表的层叠性与选择器优先级，这里文件加载顺序也很重要。
+        </p>
+      </li>
+    </ol>
+  </article>
+</div>

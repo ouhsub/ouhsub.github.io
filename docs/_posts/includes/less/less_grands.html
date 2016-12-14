@@ -1,8 +1,10 @@
-<li>
-  <h3>流程控制</h3>
+<div class="chapter-item">
+  <a name="grands流程控制"></a>
+  <h2 class="chapter-title">流程控制</h2>
+  <article>
   <ol>
     <li>
-      <h4>mixin与流程控制</h4>
+      <h3>mixin与流程控制</h3>
       <p>
         如果要匹配条件表达式，控制就很有用了。
         为了与css的天性保持一致，Less选择支持guarded mixin而不是if/else声明。
@@ -27,7 +29,7 @@ color: #ddd;
 background-color: white;
 color: #555;
 }</code></pre>
-      <h5>比较控制</h5>
+      <h4>比较控制</h4>
       <p>
         比较操作控制有： >, >=, =, =<, <.
         此外，true关键字是唯一的真值，
@@ -46,7 +48,7 @@ color: #555;
 
 .max (@a; @b) when (@a > @b) { width: @a }
 .max (@a; @b) when (@a < @b) { width: @b }</code></pre>
-      <h5>逻辑控制</h5>
+      <h4>逻辑控制</h4>
       <p>
         逻辑控制，语法是基于css媒体查询的。
       </p>
@@ -64,14 +66,14 @@ color: #555;
           <pre><code class="language-less">.mixin (@a) when (@a > 10), (@a < -10) { ... }</code></pre>
         </li>
       </ol>
-      <h5>条件混入</h5>
+      <h4>条件混入</h4>
       <p>
         default函数可用于创建条件混入，类似于else或default声明
       </p>
       <pre><code class="language-less">.mixin (@a) when (@a > 0) { ...  }
 .mixin (@a) when (default()) { ... }
 // matches only if first mixin does not, i.e.when @a <= 0</code></pre>
-      <h5>CSS控制</h5>
+      <h4>CSS控制</h4>
       <p>
         流程控制也可以用在css选择器上，其实就是一种声明并立即调用一个mixin的语法糖，类似js匿名函数
       </p>
@@ -96,7 +98,7 @@ a {
 color: blue;
 }
 }</code></pre>
-      <h5>循环</h5>
+      <h4>循环</h4>
       <p>
         Less中一个mixin可以调用自身，递归函数，结合条件表达式和模式匹配可以创建循环结构
       </p>
@@ -134,14 +136,14 @@ width: 100%;
 }</code></pre>
     </li>
     <li>
-      <h4>合并</h4>
+      <h3>合并</h3>
       <p>
         合并特性允许将多处定义的属性值用逗号或空格聚集到一起，形成一个属性列表。
         这个特定对background和transform这样的属性很有用。
       </p>
       <ol>
         <li>
-          <h5>逗号</h5>
+          <h4>逗号</h4>
           <pre><code class="language-less">.mixin() {
 box-shadow+: inset 0 0 10px #555;
 }
@@ -153,7 +155,7 @@ box-shadow: inset 0 0 10px #555, 0 0 20px black;
 }</code></pre>
         </li>
         <li>
-          <h5>空格</h5>
+          <h4>空格</h4>
           <pre><code class="language-less">.mixin() {
 transform+_: scale(2);
 }
@@ -171,7 +173,7 @@ transform: scale(2) rotate(15deg);
       </p>
     </li>
     <li>
-      <h4>父选择器</h4>
+      <h3>父选择器</h3>
       <p>
         &amp;符号代表嵌套规则上的父选择器，在处理现存选择器的伪类或修改类的时候很有用
       </p>
@@ -188,7 +190,7 @@ a:hover {
 color: green;
 }</code></pre>注意咯，如果没有&amp;符号，将会输出<code class="language-css">a :hover</code>
 (<code class="language-css">a:hover</code>是不一样的)。
-      <h5>重复选择器</h5>
+      <h4>重复选择器</h4>
       <pre><code class="language-less">.button {
 &amp;-ok {
 background-image: url("ok.png");
@@ -209,7 +211,7 @@ background-image: url("cancel.png");
 .button-custom {
 background-image: url("custom.png");
 }</code></pre>
-      <h5>多个&amp;</h5>
+      <h4>多个&amp;</h4>
       <pre><code class="language-less">.link {
 &amp; + &amp; {
 color: red;
@@ -268,7 +270,7 @@ color: blue;
 .grand .parentish {
 color: cyan;
 }</code></pre>
-      <h5>改变选择器顺序</h5>
+      <h4>改变选择器顺序</h4>
       <p>
         通过在&amp;前面添加前缀选择器，可以改变选择器顺序。
         For example, when using Modernizr, you might want to specify different rules
@@ -287,7 +289,7 @@ border-radius: 5px;
 .no-borderradius .header .menu {
 background-image: url('images/button-background.png');
 }</code></pre>
-      <h5>组合扩展</h5>
+      <h4>组合扩展</h4>
       <p>
         &smp;可用于生成用逗号分开的选择器列表中每一种可能的选择器组合
       </p>
@@ -322,4 +324,5 @@ border-top: 0;
 }</code></pre>
     </li>
   </ol>
-</li>
+  </article>
+</div>

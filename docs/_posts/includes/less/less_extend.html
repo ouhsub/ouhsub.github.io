@@ -1,5 +1,6 @@
-<li>
-  <h3>Extend扩展</h3>
+<div class="chapter-item">
+  <a name="extend扩展"></a>
+  <h2 class="chapter-title">Extend扩展</h2>
   <p>
     Extend is a Less pseudo-class(伪类) which merges the selector
     (it is put on) with ones that match what it references.
@@ -33,7 +34,7 @@ nav ul {
   </p>
   <ol>
     <li>
-      <h4>Extend语法</h4>
+      <h3>Extend语法</h3>
       <p>
         extend既可以附加在选择器上，也可以放置于规则列表中。
         它看起来像是一个带着选择器参数和可选关键字all的伪类。
@@ -53,7 +54,7 @@ nav ul {
 .e:extend(.g) {}
 // 上面过的代码和下面的代码结果一样。
 .e:extend(.f, .g) {}</code></pre>
-      <h5>附加到选择器上的extend</h5>
+      <h4>附加到选择器上的extend</h4>
       <p>
         附加到选择器上的extend看起来像传递了选择器参数的一般的伪类一样，
         一个选择器可以包含多个扩展从句，但是所有扩展都必须位于选择器的最后。
@@ -93,7 +94,7 @@ nav ul {
 .big-bucket {
   font-size: 20px;
 }</code></pre>
-      <h5>规则列表中的Extend</h5>
+      <h4>规则列表中的Extend</h4>
       <p>
         使用<code class="language-less">&amp:extend(selector)</code>语法，
         可以将extend放置于规则列表中，这是一种简写方式，用于为规则列表的每一个选择器设置extend。
@@ -105,7 +106,7 @@ nav ul {
 //这两段规则是一样的。
 pre:hover:extend(div pre),
 .some-class:extend(div pre) {}</code></pre>
-      <h5>扩展嵌套选择器</h5>
+      <h4>扩展嵌套选择器</h4>
       <p>
         extend可以匹配嵌套的选择器:
       </p>
@@ -129,7 +130,7 @@ pre:hover:extend(div pre),
 .some-class {
   color: blue;
 }</code></pre>
-      <h5>精确匹配 Extend</h5>
+      <h4>精确匹配 Extend</h4>
       <p>
         extend默认查找精确匹配的选择器，这与选择器是否有leading是有关系的，
         但是与两个nth-表达式是否表达同一个意思是没关系的，他们必须是一毛一样。
@@ -193,7 +194,7 @@ pre:hover:extend(div pre),
 }</code></pre>
     </li>
     <li>
-      <h4>Extend "all"</h4>
+      <h3>Extend "all"</h3>
       <p>
         当在参数最后指定all关键字的时候，less会去匹配任何带有参数选择器作为一部分或全部的选择器。
         选择器将被替换到（选择器参数所在的选择器）中的选择器参数用以生成新的选择器。
@@ -220,7 +221,7 @@ pre:hover:extend(div pre),
 }</code></pre>本质上可以将这种模式的操作看作是一次无损的查找和替换。
     </li>
     <li>
-      <h4>插值选择器的Extend</h4>
+      <h3>插值选择器的Extend</h3>
       <p>
         extend不能匹配带有变量的选择器。如果选择器带有变量，extend会无视他。
         这是一个尚待解决的问题。但是extend可以附加在带有变量的选择器上。
@@ -245,7 +246,7 @@ pre:hover:extend(div pre),
 }</code></pre>
     </li>
     <li>
-      <h4>作用域</h4>
+      <h3>作用域</h3>
       <p>
         媒体查询下的extend只能匹配到声明块内的选择器:
       </p>
@@ -313,7 +314,7 @@ pre:hover:extend(div pre),
 }</code></pre>
     </li>
     <li>
-      <h4>重复检查</h4>
+      <h3>重复检查</h3>
       <p>
         没有重复检测功能
       </p>
@@ -329,10 +330,10 @@ pre:hover:extend(div pre),
 }</code></pre>
     </li>
     <li>
-      <h4>经典案例</h4>
+      <h3>经典案例</h3>
       <ul>
         <li>
-          <h5>避免添加基础类</h5>
+          <h4>避免添加基础类</h4>
           <p>
             比如，有一个类：
             <pre><code class="language-css">.animal {
@@ -361,7 +362,7 @@ pre:hover:extend(div pre),
           </p>
         </li>
         <li>
-          <h5>精简css</h5>
+          <h4>精简css</h4>
           <p>
             mixin复制所有属性到选择器下生成新的规则列表，会引起不必要的重复。
             可以使用extend代替mixin，将选择器移动到规则上，从而只生成必要的css。
@@ -401,7 +402,7 @@ pre:hover:extend(div pre),
 }</code></pre>
         </li>
         <li>
-          <h5>Combining Styles / A More Advanced Mixin</h5>
+          <h4>Combining Styles / A More Advanced Mixin</h4>
           <p>
             另一个案例是mixin的替代，因为mixin只能用在简单的选择器上，
             如果有两个不同的html区块，需要引用相同的样式，可以使用extend关联两个区块。
@@ -416,4 +417,4 @@ button.list-style {
       </ul>
     </li>
   </ol>
-</li>
+</div>
