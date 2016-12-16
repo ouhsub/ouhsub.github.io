@@ -1,0 +1,121 @@
+- name: hue
+  desc: >
+    Extracts the hue channel of a color object in the HSL color space.
+  para:
+    - type: color
+      desc: a color object
+  return: integer 0-360
+  example: |
+    hue(hsl(90, 100%, 50%)) //=> 90
+
+- name: saturation
+  desc: >
+    Extracts the saturation channel of a color object in the HSL color space.
+  para:
+    - type: color
+      desc: a color object
+  return: percentage 0-100
+  example: |
+    saturation(hsl(90, 100%, 50%)) //=> 100%
+
+- name: lightness
+  desc: >
+    Extracts the lightness channel of a color object in the HSL color space
+  para:
+    - type: color
+      desc: a color object
+  return: percentage 0-100
+  example: |
+    lightness(hsl(90, 100%, 50%)) //=> 50%
+
+- name: hsvhue
+  desc: >
+    Extracts the hue channel of a color object in the HSV color space
+  para:
+    - type: color
+      desc: a color object
+  return: integer 0-360
+  example: |
+    hsvhue(hsv(90, 100%, 50%)) //=> 90
+
+- name: hsvsaturation
+  desc: >
+    Extracts the saturation channel of a color object in the HSV color space.
+  para:
+    - type: color
+      desc: a color object
+  return: percentage 0-100
+  example: |
+    hsvsaturation(hsv(90, 100%, 50%)) //=> 100%
+
+- name: hsvvalue
+  desc: >
+    Extracts the value channel of a color object in the HSV color space
+  para:
+    - type: color
+      desc: a color object
+  return: percentage 0-100
+  example: |
+    hsvvalue(hsv(90, 100%, 50%)) //=> 50%
+
+- name: red
+  desc: >
+    Extracts the red channel of a color object
+  para:
+    - type: color
+      desc: a color object
+  return: float 0-255
+  example: |
+    red(rgb(10, 20, 30)) //=> 10
+
+- name: green
+  desc: >
+    Extracts the green channel of a color object
+  para:
+    - type: color
+      desc: a color object
+  return: float 0-255
+  example: |
+    green(rgb(10, 20, 30)) //=> 20
+
+- name: blue
+  desc: >
+    Extracts the blue channel of a color object
+  para:
+    - type: color
+      desc: a color object
+  return: float 0-255
+  example: |
+    blue(rgb(10, 20, 30)) //=> 30
+
+- name: alpha
+  desc: >
+    Extracts the alpha channel of a color object
+  para:
+    - type: color
+      desc: a color object
+  return: float 0-1
+  example: |
+    alpha(rgba(10, 20, 30, 0.5)) //=> 0.5
+
+- name: luma
+  desc: >
+    Calculates the luma (perceptual brightness) of a color object.
+    Uses SMPTE C / Rec. 709 coefficients, as recommended in WCAG 2.0. This calculation is also used in the contrast function.
+    Before v1.7.0 the luma was calculated without gamma correction, use the luminance function to calculate these "old" values.
+  para:
+    - type: color
+      desc: a color object
+  return: percentage 0-100%
+  example: |
+    luma(rgb(100, 200, 30)) //=> 44%
+
+- name: luminance
+  desc: >
+    Calculates the value of the luma without gamma correction (this function was named luma before v1.7.0)
+  para:
+    - type: color
+      desc: a color object
+  return: percentage 0-100%
+  example: |
+    luminance(rgb(100, 200, 30)) //=> 65%

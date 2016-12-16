@@ -1,0 +1,255 @@
+- name: saturate
+  desc: >
+    Increase the saturation of a color in the HSL color space by an absolute amount.
+  para:
+    - type: color
+      desc: a color object
+    - type: amount
+      desc: A percentage 0-100%
+    - type: method
+      desc: Optional, set to relative for the adjustment to be relative to the current value.
+  return: color
+  example: |
+    saturate(hsl(90, 80%, 50%), 20%)
+    //=>  #80ff00 // hsl(90, 100%, 50%)
+  col_point:
+    - ori: '#80e619'
+      pop: '#80ff00'
+
+- name: desaturate
+  desc: >
+    Decrease the saturation of a color in the HSL color space by an absolute amount.
+  para:
+    - type: color
+      desc: a color object
+    - type: amount
+      desc: A percentage 0-100%
+    - type: method
+      desc: Optional, set to relative for the adjustment to be relative to the current value.
+  return: color
+  example: |
+    desaturate(hsl(90, 80%, 50%), 20%)
+    //=>  #80cc33 // hsl(90, 60%, 50%)
+  col_point:
+    - ori: '#80e619'
+      pop: '#80cc33'
+
+- name: lighten
+  desc: >
+    Increase the lightness of a color in the HSL color space by an absolute amount
+  para:
+    - type: color
+      desc: a color object
+    - type: amount
+      desc: A percentage 0-100%
+    - type: method
+      desc: Optional, set to relative for the adjustment to be relative to the current value.
+  return: color
+  example: |
+    lighten(hsl(90, 80%, 50%), 20%)
+    //=>  #b3f075 // hsl(90, 80%, 70%)
+  col_point:
+    - ori: '#80e619'
+      pop: '#b3f075'
+
+- name: darken
+  desc: >
+    Decrease the lightness of a color in the HSL color space by an absolute amount.
+  para:
+    - type: color
+      desc: a color object
+    - type: amount
+      desc: A percentage 0-100%
+    - type: method
+      desc: Optional, set to relative for the adjustment to be relative to the current value.
+  return: color
+  example: |
+    darken(hsl(90, 80%, 50%), 20%)
+    //=>  #4d8a0f // hsl(90, 80%, 30%)
+  col_point:
+    - ori: '#80e619'
+      pop: '#4d8a0f'
+
+- name: fadein
+  desc: >
+    Decrease the transparency (or increase the opacity) of a color, making it more opaque.
+    Has no effect on opaque colors. To fade in the other direction use fadeout.
+  para:
+    - type: color
+      desc: a color object
+    - type: amount
+      desc: A percentage 0-100%
+    - type: method
+      desc: Optional, set to relative for the adjustment to be relative to the current value.
+  example: |
+    fadein(hsla(90, 90%, 50%, 0.5), 10%)
+    //=>  rgba(128, 242, 13, 0.6) // hsla(90, 90%, 50%, 0.6)
+
+- name: fadeout
+  desc: >
+    Increase the transparency (or decrease the opacity) of a color, making it less opaque.
+    To fade in the other direction use fadein.
+  para:
+    - type: color
+      desc: a color object
+    - type: amount
+      desc: A percentage 0-100%
+    - type: method
+      desc: Optional, set to relative for the adjustment to be relative to the current value.
+  example: |
+    fadeout(hsla(90, 90%, 50%, 0.5), 10%)
+    //=>  rgba(128, 242, 13, 0.4) // hsla(90, 90%, 50%, 0.4)
+
+- name: fade
+  desc: >
+    Set the absolute transparency of a color. Can be applied to colors whether they already have an opacity value or not.
+  para:
+    - type: color
+      desc: a color object
+    - type: amount
+      desc: A percentage 0-100%
+  example: |
+    fade(hsl(90, 90%, 50%), 10%)
+    //=>  rgba(128, 242, 13, 0.1) //hsla(90, 90%, 50%, 0.1)
+
+- name: spin
+  desc: >
+    Rotate the hue angle of a color in either direction.
+    While the angle range is 0-360, it applies a mod 360 operation,
+    so you can pass in much larger (or negative) values and they
+    will wrap around e.g. angles of 360 and 720 will produce the
+    same result. Note that colors are passed through an RGB conversion,
+    which doesn't retain hue value for greys (because hue has no
+    meaning when there is no saturation), so make sure you apply
+    functions in a way that preserves hue, for example don't do this:
+
+    @c: saturate(spin(#aaaaaa, 10), 10%);
+    Do this instead:
+
+    @c: spin(saturate(#aaaaaa, 10%), 10);
+    Colors are always returned as RGB values, so applying spin to a grey value will do nothing.
+  para:
+    - type: color
+      desc: a color object
+    - type: angle
+      desc: A number of degrees to rotate (+ or -)
+  example: |
+    spin(hsl(10, 90%, 50%), 30)
+    //=>#f2a60d // hsl(40, 90%, 50%)
+    spin(hsl(10, 90%, 50%), -30)
+    //=>#f20d59 // hsl(340, 90%, 50%)
+  col_point:
+    - ori: '#f2330d'
+      pop: '#f2a60d'
+    - ori: '#f2330d'
+      pop: '#f20d59'
+
+- name: mix
+  desc: >
+    Mix two colors together in variable proportion. Opacity is included in the calculations.
+  para:
+    - type: color1
+      desc: a color object
+    - type: color2
+      desc: a color object
+    - type: weight
+      desc: Optional, a percentage balance point between the two colors, defaults to 50%.
+  example: |
+    mix(#ff0000, #0000ff, 50%)
+    //=> #800080
+    mix(rgba(100,0,0,1.0), rgba(0,100,0,0.5), 50%)
+    //=> rgba(75, 25, 0, 0.75)
+  col_point:
+    - ori:
+       - '#ff0000'
+       - '#0000ff'
+      pop: '#800080'
+
+- name: tint
+  desc: >
+    Mix color with white in variable proportion. It is the same as calling mix(#ffffff, @color, @weight)
+  para:
+    - type: color
+      desc: a color object
+    - type: weight
+      desc: Optional, a percentage balance point between color and white, defaults to 50%.
+  example: |
+    no-alpha: tint(#007fff, 50%);
+    // => no-alpha: #80bfff;
+    with-alpha: tint(rgba(00,0,255,0.5), 50%);
+    // => with-alpha: rgba(191, 191, 255, 0.75);
+  col_point:
+    - ori: '#ff00ff'
+      pop: '#ff80ff'
+
+- name: shade
+  desc: >
+    Mix color with black in variable proportion. It is the same as calling mix(#000000, @color, @weight)
+  para:
+    - type: color
+      desc: a color object
+    - type: weight
+      desc: Optional, a percentage balance point between color and black, defaults to 50%.
+  example: |
+    no-alpha: shade(#007fff, 50%);
+    //=> no-alpha: #004080;
+    with-alpha: shade(rgba(00,0,255,0.5), 50%);
+    //=> with-alpha: rgba(0, 0, 64, 0.75);
+  col_point:
+    - ori: '#ff00ff'
+      pop: '#800080'
+
+- name: greyscale
+  desc: >
+    Remove all saturation from a color in the HSL color space; the same as calling desaturate(@color, 100%).
+    Because the saturation is not affected by hue, the resulting color mapping may be somewhat dull or muddy; luma may provide a better result as it extracts perceptual rather than linear brightness, for example greyscale('#0000ff') will return the same value as greyscale('#00ff00'), though they appear quite different in brightness to the human eye.
+  para:
+    - type: color
+      desc: a color object
+  example: |
+    greyscale(hsl(90, 90%, 50%))
+    //=> #808080 // hsl(90, 0%, 50%)
+  note: >
+    the generated grey looks darker than the original green, even though its lightness value is the same.
+    Compare with using luma (usage is different because luma returns a single value, not a color)
+    @c: luma(hsl(90, 90%, 50%));
+    color: rgb(@c, @c, @c);
+    Output: #cacaca
+    80f20d ➜ cacaca
+    This time the grey's lightness looks about the same as the green, though its value is actually higher.
+  col_point:
+    - ori: '#80f20d'
+      pop: '#808080'
+
+- name: contrast
+  desc: >
+    Choose which of two colors provides the greatest contrast with another.
+    This is useful for ensuring that a color is readable against a background, which is also useful for accessibility compliance. This function works the same way as the contrast function in Compass for SASS. In accordance with WCAG 2.0, colors are compared using their gamma-corrected luma value, not their lightness.
+    The light and dark parameters can be supplied in either order - the function will calculate their luma values and assign light and dark automatically, which means you can't use this function to select the least contrasting color by reversing the order.
+  para:
+    - type: color
+      desc: A color object to compare against
+    - type: dark
+      desc: optional - A designated dark color (defaults to black)
+    - type: light
+      desc: optional - A designated light color (defaults to white)
+    - type: threshold
+      desc: >
+        optional - A percentage 0-100% specifying where the transition from "dark" to "light" is (defaults to 43%, matching SASS). This is used to bias the contrast one way or another, for example to allow you to decide whether a 50% grey background should result in black or white text. You would generally set this lower for 'lighter' palettes, higher for 'darker' ones.
+  example: |
+    p {
+      a: contrast(#bbbbbb);
+      b: contrast(#222222, #101010);
+      c: contrast(#222222, #101010, #dddddd);
+      d: contrast(hsl(90, 100%, 50%), #000000, #ffffff, 30%);
+      e: contrast(hsl(90, 100%, 50%), #000000, #ffffff, 80%);
+    }
+    // =>
+    p {
+      a: #000000 // black
+      b: #ffffff // white
+      c: #dddddd
+      d: #000000 // black
+      e: #ffffff // white
+    }
+    //These examples use the above calculated colors for background and foreground; you can see that you never end up with white-on-white, nor black-on-black, though it's possible to use the threshold to permit lower-contrast outcomes, as in the last example

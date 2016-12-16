@@ -3,7 +3,7 @@ layout: blog
 title: Less Doc
 excerpt: ''
 tags: less
-chapters: [概述,import导入文件,variables变量,mixin混入,extend扩展,grands流程控制,function内置函数]
+chapters: [import导入文件,variables变量,mixin混入,extend扩展,流程控制,父选择器,属性合并,内置函数]
 scripts: [prism.default.basic]
 styles: [prism.default.basic]
 ---
@@ -11,15 +11,19 @@ styles: [prism.default.basic]
 {% include blog_head.html %}
 <hr>
 <div class="blog-body">
-  {% include_relative includes/less/less_overview.html %}
   {% include_relative includes/less/less_import.html %}
   {% include_relative includes/less/less_variables.html %}
   {% include_relative includes/less/less_mixin.html %}
   {% include_relative includes/less/less_grands.html %}
+  {% include_relative includes/less/less_parentselector.html %}
+  {% include_relative includes/less/less_combined.html %}
   {% include_relative includes/less/less_extend.html %}
   {% include_relative includes/less/less_function.html %}
 </div>
 <hr>
 <div class="blog-foot">
-
+  <h3>参考资料</h3>
+  <p class="link-item">
+    <a href="http://lesscss.org/features/" target="_blank">less官方文档</a>
+  </p>
 </div>

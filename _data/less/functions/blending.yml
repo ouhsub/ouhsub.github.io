@@ -1,0 +1,186 @@
+- name: multiply
+  desc: >
+    Multiply two colors.
+    Corresponding RGB channels from each of the two colors are multiplied
+    together then divided by 255.
+    The result is a darker color.
+  para:
+    - type: color1
+      desc: a color object
+    - type: color2
+      desc: a color object
+  return: color
+  example: |
+    multiply(#ff6600, #000000); //=>#000000
+    multiply(#ff6600, #333333); //=>#331400
+    multiply(#ff6600, #666666); //=>#662900
+    multiply(#ff6600, #999999); //=>#993d00
+    multiply(#ff6600, #cccccc); //=>#cc5200
+    multiply(#ff6600, #ffffff); //=>#ff6600
+    multiply(#ff6600, #ff0000); //=>#ff0000
+    multiply(#ff6600, #00ff00); //=>#006600
+    multiply(#ff6600, #0000ff); //=>#000000
+
+- name: screen
+  desc: >
+    Do the opposite of multiply. The result is a brighter color.
+  para:
+    - type: color1
+      desc: a color object
+    - type: color2
+      desc: a color object
+  return: color
+  example: |
+    screen(#ff6600, #000000); //=>#ff6600
+    screen(#ff6600, #333333); //=>#ff8533
+    screen(#ff6600, #666666); //=>#ffa366
+    screen(#ff6600, #999999); //=>#ffc299
+    screen(#ff6600, #cccccc); //=>#ffe0cc
+    screen(#ff6600, #ffffff); //=>#ffffff
+    screen(#ff6600, #ff0000); //=>#ff6600
+    screen(#ff6600, #00ff00); //=>#ffff00
+    screen(#ff6600, #0000ff); //=>#ff66ff
+
+- name: overlay
+  desc: >
+    Combines the effects of both multiply and screen.
+    Conditionally make light channels lighter and dark channels darker.
+    Note: The results of the conditions are determined by the first color parameter.
+  para:
+    - type: color1
+      desc: A base color object. Also the determinant color to make the result lighter or darker.
+    - type: color2
+      desc: A color object to overlay.
+  return: color
+  example: |
+    overlay(#ff6600, #000000); //=>#ff0000
+    overlay(#ff6600, #333333); //=>#ff2900
+    overlay(#ff6600, #666666); //=>#ff5200
+    overlay(#ff6600, #999999); //=>#ff7a00
+    overlay(#ff6600, #cccccc); //=>#ffa300
+    overlay(#ff6600, #ffffff); //=>#ffcc00
+    overlay(#ff6600, #ff0000); //=>#ff0000
+    overlay(#ff6600, #00ff00); //=>#ffcc00
+    overlay(#ff6600, #0000ff); //=>#ff0000
+
+- name: softlight
+  desc: >
+    Similar to overlay but avoids pure black resulting in pure black, and pure white resulting in pure white.
+  para:
+    - type: color1
+      desc: A color object to soft light another.
+    - type: color2
+      desc: A color object to be soft lighten.
+  return: color
+  example: |
+    softlight(#ff6600, #000000); //=>#ff2900
+    softlight(#ff6600, #333333); //=>#ff4100
+    softlight(#ff6600, #666666); //=>#ff5a00
+    softlight(#ff6600, #999999); //=>#ff7200
+    softlight(#ff6600, #cccccc); //=>#ff8a00
+    softlight(#ff6600, #ffffff); //=>#ffa100
+    softlight(#ff6600, #ff0000); //=>#ff2900
+    softlight(#ff6600, #00ff00); //=>#ffa100
+    softlight(#ff6600, #0000ff); //=>#ff2900
+
+- name: hardlight
+  desc: >
+    The same as overlay but with the color roles reversed.
+  para:
+    - type: color1
+      desc: A color object to overlay.
+    - type: color2
+      desc: A base color object. Also the determinant color to make the result lighter or darker.
+  return: color
+  example: |
+    hardlight(#ff6600, #000000); //=>#000000
+    hardlight(#ff6600, #333333); //=>#662900
+    hardlight(#ff6600, #666666); //=>#cc5200
+    hardlight(#ff6600, #999999); //=>#ff8533
+    hardlight(#ff6600, #cccccc); //=>#ffc299
+    hardlight(#ff6600, #ffffff); //=>#ffffff
+    hardlight(#ff6600, #ff0000); //=>#ff0000
+    hardlight(#ff6600, #00ff00); //=>#00ff00
+    hardlight(#ff6600, #0000ff); //=>#0000ff
+
+- name: difference
+  desc: >
+    Subtracts the second color from the first color on a channel-by-channel basis. Negative values are inverted. Subtracting black results in no change; subtracting white results in color inversion.
+  para:
+    - type: color1
+      desc: A color object to act as the minuend
+    - type: color2
+      desc: A color object to act as the subtrahend.
+  return: color
+  example: |
+    difference(#ff6600, #000000); //=>#ff6600
+    difference(#ff6600, #333333); //=>#cc3333
+    difference(#ff6600, #666666); //=>#990066
+    difference(#ff6600, #999999); //=>#663399
+    difference(#ff6600, #cccccc); //=>#3366cc
+    difference(#ff6600, #ffffff); //=>#0099ff
+    difference(#ff6600, #ff0000); //=>#006600
+    difference(#ff6600, #00ff00); //=>#ff9900
+    difference(#ff6600, #0000ff); //=>#ff66ff
+
+- name: exclusion
+  desc: >
+    A similar effect to difference with lower contrast
+  para:
+    - type: color1
+      desc: A color object to act as the minuend.
+    - type: color2
+      desc: A color object to act as the subtrahend.
+  return: color
+  example: |
+    exclusion(#ff6600, #000000); //=>#ff6600
+    exclusion(#ff6600, #333333); //=>#cc7033
+    exclusion(#ff6600, #666666); //=>#997a66
+    exclusion(#ff6600, #999999); //=>#668599
+    exclusion(#ff6600, #cccccc); //=>#338fcc
+    exclusion(#ff6600, #ffffff); //=>#0099ff
+    exclusion(#ff6600, #ff0000); //=>#006600
+    exclusion(#ff6600, #00ff00); //=>#ff9900
+    exclusion(#ff6600, #0000ff); //=>#ff66ff
+
+- name: average
+  desc: >
+    A similar effect to difference with lower contrast
+  para:
+    - type: color1
+      desc: A color object to act as the minuend.
+    - type: color2
+      desc: A color object to act as the subtrahend.
+  return: color
+  example: |
+    average(#ff6600, #000000); //=>#803300
+    average(#ff6600, #333333); //=>#994d1a
+    average(#ff6600, #666666); //=>#b36633
+    average(#ff6600, #999999); //=>#cc804d
+    average(#ff6600, #cccccc); //=>#e69966
+    average(#ff6600, #ffffff); //=>#ffb380
+    average(#ff6600, #ff0000); //=>#ff3300
+    average(#ff6600, #00ff00); //=>#80b300
+    average(#ff6600, #0000ff); //=>#803380
+
+- name: negation
+  desc: >
+      Do the opposite effect to difference.
+      The result is a brighter color.
+      Note: The opposite effect doesn't mean the inverted effect as resulting from an addition operation.
+  para:
+    - type: color1
+      desc: A color object to act as the minuend.
+    - type: color2
+      desc: A color object to act as the subtrahend.
+  return: color
+  example: |
+    negation(#ff6600, #000000); //=>#ff6600
+    negation(#ff6600, #333333); //=>#cc9933
+    negation(#ff6600, #666666); //=>#99cc66
+    negation(#ff6600, #999999); //=>#66ff99
+    negation(#ff6600, #cccccc); //=>#33cccc
+    negation(#ff6600, #ffffff); //=>#0099ff
+    negation(#ff6600, #ff0000); //=>#006600
+    negation(#ff6600, #00ff00); //=>#ff9900
+    negation(#ff6600, #0000ff); //=>#ff66ff

@@ -28,6 +28,12 @@ styles: [prism.default.basic]
         并且降低了CSS的维护成本。借助CSS预编译语言可以更便捷的进行Web开发。
       </p>
       <p>
+        换一个角度来看，完全可以把它看作是一种CSS代码管理工具。
+        一方面，其语法特点、风格与CSS非常相似，甚至可以直接用来编译CSS文件;
+        另一方面，使用它的目的毕竟还是要编译出CSS文件，真正用在项目中的也还是CSS代码。
+        可以说，使用CSS预编译语言的目的就是简化样式表书写，优化样式表的维护和管理。
+      </p>
+      <p>
         目前使用较广泛的CSS预编译语言主要有Sass、Less和Stylus等。其工作原理基本上是一样的，
         这里暂且不论孰优孰劣，仅以Less为例讨论下CSS预编译语言的使用。
       </p>
@@ -103,43 +109,332 @@ styles: [prism.default.basic]
           </p>
         </li>
         <li>
-          <h3>利用变量集中管理样式表的属性</h3>
+          <h3>利用变量集中配置样式表</h3>
           <p>
+            CSS样式表中大部分属性的名和值都很相似，
+            而且在样式表中同一个值被反复调用是很常见的。
+            使用变量可以方便地在一个位置集中管理这些可能被多次调用的值。
+            twbs/bootstrap的订制功能本质上也是通过设置变量值来实现的。
+            比如其源文件<code class="language-bash">less/variables.less</code>
+            中全局性的颜色值、字体及zIndex的设置:
+            <pre><code class="language-less">//variables.less
+//== Colors
+//
+//## Gray and brand colors for use across Bootstrap.
 
+@gray-base:              #000;
+@gray-darker:            lighten(@gray-base, 13.5%); // #222
+@gray-dark:              lighten(@gray-base, 20%);   // #333
+@gray:                   lighten(@gray-base, 33.5%); // #555
+@gray-light:             lighten(@gray-base, 46.7%); // #777
+@gray-lighter:           lighten(@gray-base, 93.5%); // #eee
+
+@brand-primary:         darken(#428bca, 6.5%); // #337ab7
+@brand-success:         #5cb85c;
+@brand-info:            #5bc0de;
+@brand-warning:         #f0ad4e;
+@brand-danger:          #d9534f;
+
+//== Typography
+//
+//## Font, line-height, and color for body text, headings, and more.
+
+@font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-family-serif:       Georgia, "Times New Roman", Times, serif;
+//** Default monospace fonts for `&lt;code&gt;`, `&lt;kbd&gt;`, and `&lt;pre&gt;`.
+@font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
+@font-family-base:        @font-family-sans-serif;
+
+//-- Z-index master list
+//
+// Warning: Avoid customizing these values. They're used for a bird's eye view
+// of components dependent on the z-axis and are designed to all work together.
+//
+// Note: These variables are not generated into the Customizer.
+
+@zindex-navbar:            1000;
+@zindex-dropdown:          1000;
+@zindex-popover:           1060;
+@zindex-tooltip:           1070;
+@zindex-navbar-fixed:      1030;
+@zindex-modal-background:  1040;
+@zindex-modal:             1050;</code></pre>
           </p>
         </li>
         <li>
-          <h3>基于mixin的代码复用</h3>
+          <h3>基于mixin实现灵活的代码复用</h3>
           <p>
             mixin就是一种动作，将源选择器中的规则<strong>复制并混合</strong>到目标选择器中。
             根据mixin源是否会被编译输出，mixin可以简单的分为两种，一种是混入现存样式的选择器中的规则，
             其实就是一个简单的复制，混入源也会被编译输出(其实这种情况下并不适合使用mixin,
             简单的复制混入源的规则到混入目标中，只会使最终生成的代码冗余，而使用extend则
             只是简单的将目标选择器添加到混入源的选择器列表中，显然是更好的选择);
-            另一种是混入专门返回样式规则的mixin函数的返回规则，这类mixin源不会被编译输出。
+            另一种是混入专门返回样式规则的mixin的返回规则，这类mixin源不会被编译输出。
           </p>
           <h4>mixin函数</h4>
           <p>
-            
+            这里将不会被编译输出的mixin称为mixin函数。mixin函数是带括号的mixin，
+            根据返回值的不同可以分为: 返回规则列表的简单mixin，返回其他值(变量、mixin)的高级mixin。
+            根据传入参数的不同，又可以分为: 不接受参数的无参mixin，接受一个到多个普通参数的普参mixin以及
+            接受规则列表作为参数的mixin。
+          </p>
+          <p>
+            无论是哪一种mixin，其存在的意义都是为了产生进行混入的规则列表。例如
+            twbs/bootstrap(3.3.7)的Less源文件中的mixins/文件夹下就是包含着mixin的文件。
+            <pre><code class="language-less">// part of vendor-prefixes.less
+// Drop shadows
+//
+// Note: Deprecated `.box-shadow()` as of v3.1.0 since all of Bootstrap's
+// supported browsers that have box shadow capabilities now support it.
+
+.box-shadow(@shadow) {
+  -webkit-box-shadow: @shadow; // iOS <4.3 &amp; Android <4.1
+          box-shadow: @shadow;
+}
+
+// opacity.less
+
+.opacity(@opacity) {
+  opacity: @opacity;
+  // IE8 filter
+  @opacity-ie: (@opacity * 100);
+  filter: ~"alpha(opacity=@{opacity-ie})";
+}
+
+//text-overflow.less
+
+.text-overflow() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}</code></pre>
+            这里结合@import指令将mixin函数按照类别和功能分别放在了不同文件中，
+            这样首先是对结构进行了优化，然后提高了代码的可复用性。
           </p>
           <h4>mixin控制语句</h4>
           <p>
+            Less实现了基于@media特性的逻辑控制，可以进行简单的条件控制和循环。
+            这里通过twbs/bootstrap(3.3.7)的grid系统来看一下。
+          </p>
+          <p>
+            除了两个用来整合结构的导入文件以及包含全局变量的配置文件外，
+            bootstrap-less的grid系统主要通过三个文件来实现:
+            <code class="language-bash">less/grid.less</code>、
+            <code class="language-bash">less/mixins/grid-framework.less</code>及
+            <code class="language-bash">less/mixins/grid.less</code>。
+          </p>
+          <p>
+            <code class="language-bash">less/mixins/grid-framework.less</code>
+            文件中主要定义了两个mixin: <code class="language-less">.make-grid-columns() {}</code>
+            和<code class="language-less">.make-grid(@class) {}</code>。
+            而<code class="language-less">.make-grid(@class) {}</code>里又调用了两个mixin:
+            <code class="language-less">.float-grid-columns(@class);</code>和
+            <code class="language-less">.loop-grid-columns(@grid-columns, @class, @type);</code>
+          </p>
+          <p>
+            来看一下mixin <code class="language-less">.make-grid-columns() {}</code>:
+            <pre><code class="language-less">.make-grid-columns() {
+// Common styles for all sizes of grid columns, widths 1-12
+.col(@index) { // initial
+  @item: ~".col-xs-@{index}, .col-sm-@{index}, .col-md-@{index}, .col-lg-@{index}";
+  .col((@index + 1), @item); // 调用第二个.col()
+}
+.col(@index, @list) when (@index =< @grid-columns) { // general; "=<" isn't a typo
+  @item: ~".col-xs-@{index}, .col-sm-@{index}, .col-md-@{index}, .col-lg-@{index}";
+  .col((@index + 1), ~"@{list}, @{item}"); // 递归调用
+}
+.col(@index, @list) when (@index > @grid-columns) { // terminal
+  @{list} {
+    position: relative;
+    // Prevent columns from collapsing when empty
+    min-height: 1px;
+    // Inner gutter via padding
+    padding-left:  ceil((@grid-gutter-width / 2));
+    padding-right: floor((@grid-gutter-width / 2));
+  }
+}
+.col(1); // kickstart it 调用第一个.col()
+}</code></pre>
+            mixin中结合模式匹配和条件语句定义了三个同名的
+            <code class="language-less">.col()</code>，
+            其中前两个通过递归循环来生成选择器，第三个用来定义属性列表。
+            调用<code class="language-less">.make-grid-columns() {}</code>
+            后编译输出的结果是这样的:
+            <pre><code class="language-css">.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1,
+.col-xs-2, .col-sm-2, .col-md-2, .col-lg-2,
+.col-xs-3, .col-sm-3, .col-md-3, .col-lg-3,
+.col-xs-4, .col-sm-4, .col-md-4, .col-lg-4,
+.col-xs-5, .col-sm-5, .col-md-5, .col-lg-5,
+.col-xs-6, .col-sm-6, .col-md-6, .col-lg-6,
+.col-xs-7, .col-sm-7, .col-md-7, .col-lg-7,
+.col-xs-8, .col-sm-8, .col-md-8, .col-lg-8,
+.col-xs-9, .col-sm-9, .col-md-9, .col-lg-9,
+.col-xs-10, .col-sm-10, .col-md-10, .col-lg-10,
+.col-xs-11, .col-sm-11, .col-md-11, .col-lg-11,
+.col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}</code></pre>
+          </p>
+        </li>
+        <li>
+          <h3>使用extend精简代码</h3>
+          <p>
+            extend所做的事情是将调用extend的选择器累加到extend目标选择器的选择器列表中，
+            从而扩展调用者的规则，同时又不必复制规则列表，减少代码冗余。
+          </p>
+          <p>
+            bootstrap-less中针对清除浮动定义了一个mixin:
+            <pre><code class="language-less">// less/mixins/clearfix.less
+.clearfix() {
+  &amp;:before,
+  &amp;:after {
+    content: " "; // 1
+    display: table; // 2
+  }
+  &amp;:after {
+    clear: both;
+  }
+}
+</code></pre>
+            然后在需要清除浮动的地方使用extend调用了这个mixin，如
+            <code class="language-less">less/mixins/grid.less</code>
+            中:
+            <pre><code class="language-less">// part of less/mixins/grid.less
+// Centered container element
+.container-fixed(@gutter: @grid-gutter-width) {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left:  floor((@gutter / 2));
+  padding-right: ceil((@gutter / 2));
+  &amp;:extend(.clearfix all);
+}
 
+// Creates a wrapper for a series of columns
+.make-row(@gutter: @grid-gutter-width) {
+  margin-left:  ceil((@gutter / -2));
+  margin-right: floor((@gutter / -2));
+  &amp;:extend(.clearfix all);
+}</code></pre>
+            整个源文件中像这样的调用还有很多，最后编译输出的结果为:
+            <pre><code class="language-css">/* part of bootstrap.css */
+.clearfix:before,
+.clearfix:after,
+.dl-horizontal dd:before,
+.dl-horizontal dd:after,
+.container:before,
+.container:after,
+.container-fluid:before,
+.container-fluid:after,
+.row:before,
+.row:after,
+.form-horizontal .form-group:before,
+.form-horizontal .form-group:after,
+.btn-toolbar:before,
+.btn-toolbar:after,
+.btn-group-vertical > .btn-group:before,
+.btn-group-vertical > .btn-group:after,
+.nav:before,
+.nav:after,
+.navbar:before,
+.navbar:after,
+.navbar-header:before,
+.navbar-header:after,
+.navbar-collapse:before,
+.navbar-collapse:after,
+.pager:before,
+.pager:after,
+.panel-body:before,
+.panel-body:after,
+.modal-header:before,
+.modal-header:after,
+.modal-footer:before,
+.modal-footer:after {
+  display: table;
+  content: " ";
+}
+.clearfix:after,
+.dl-horizontal dd:after,
+.container:after,
+.container-fluid:after,
+.row:after,
+.form-horizontal .form-group:after,
+.btn-toolbar:after,
+.btn-group-vertical > .btn-group:after,
+.nav:after,
+.navbar:after,
+.navbar-header:after,
+.navbar-collapse:after,
+.pager:after,
+.panel-body:after,
+.modal-header:after,
+.modal-footer:after {
+  clear: both;
+}</code></pre>
+            这样就实现了所有需要清楚浮动的元素的规则，同时，没有对规则进行复制，减少了代码冗余。
+          </p>
+        </li>
+        <li>
+          <h3>内置函数</h3>
+          <p>
+            Less中有大量的内置函数，按其作用与返回值的不同可以简单的分为处理属性值的函数
+            与辅助创建控制语句的函数。
+          </p>
+          <p>
+            bootstrap-less中在颜色、字体处理上就使用了大量的内置函数:
+            <pre><code class="language-less">// part of variables.less
+@gray-lighter:          lighten(@gray-base, 93.5%); // #eee
+@brand-primary:         darken(#428bca, 6.5%); // #337ab7
+@font-size-large:       ceil((@font-size-base * 1.25)); // ~18px
+@font-size-small:       ceil((@font-size-base * 0.85)); // ~12px
+</code></pre>
           </p>
         </li>
       </ol>
+      <p>
+        我并不打算在这里对less的语法进行详细解析，具体的文档信息请参考
+        <a href="http://lesscss.org/features/" target="_blank">官方文档</a>，
+        或我总结的<a href="{{ BASE_PATH }}/docs/2016/12/14/less_doc.html">less文档</a>。
+      </p>
     </article>
   </div>
   <div class="chapter-item">
     <a name="怎样高效使用CSS预编译语言"></a>
     <h2 class="chapter-title">怎样高效使用CSS预编译语言</h2>
     <article>
-      在我看来它更像是一种代码管理工具。
+      <ol>
+        <li>
+          <h3>不要用CSS预编译脚本替代CSS文件</h3>
+          <p>
+            网页中加载样式表的最佳方式就是link一个CSS文件。
+            就算使用CSS预编译脚本也应该始终以要部署到项目中的CSS文件为目标。
+            记住了，CSS预编译语言或者说CSS预处理器就是一个样式表的代码管理工具！
+            <strong>不要在浏览器上使用！！</strong><strong>不要在浏览器上使用！！</strong><strong>不要在浏览器上使用！！</strong>
+          </p>
+        </li>
+        <li>
+          <h3>使用第三方库</h3>
+          <p>
+            第三方库中有大量可用的模块，能大大提高开发速度，提高代码质量。
+            Sass+Compass的开发方式已然成为了CSS预编译开发的最佳拍档，
+            而Less语言下也有大量免费开源的mixin第三方库可供调用。
+            使用第三方库可以免去大量基础代码的编写，那就可以集中精力进行项目创作了。
+          </p>
+        </li>
+      </ol>
     </article>
   </div>
 </div>
 <hr>
 <div class="blog-foot">
+  <h3>相关文章</h3>
+  <p class="link-item">
+    <a href="{{ BASE_PATH }}/docs/2016/12/14/less_doc.html">Less Docs</a>，
+    <a href="{{ BASE_PATH }}">Sass Docs</a>，
+    <a href="{{ BASE_PATH }}">Sass+Compass开发</a>
+  </p>
   <h3>参考资料</h3>
   <p class="link-item">
     <a href="http://lesscss.org/features/" target="_blank">less官方文档</a>

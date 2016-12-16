@@ -118,69 +118,6 @@
           <pre><code class="language-less">@import (optional, reference) "foo.less";</code></pre>
         </p>
       </li>
-      <li>
-        <h3>bootstrap与@import</h3>
-        <p>
-          twbs/bootstrap(3.3.7)的Less源文件中，有两个文件bootstrap.less与mixins.less中包含的全部都是
-          @import声明。
-        </p>
-        <pre><code class="language-less">//bootstrap.less
-// Core variables and mixins  核心变量和mixin
-@import "variables.less";      //变量文件
-@import "mixins.less";         //mixin文件
-
-// Reset and dependencies  重置和依赖
-@import "normalize.less";     //页面初始化
-@import "print.less";         //打印媒体
-@import "glyphicons.less";    //图标字体
-
-// Core CSS  核心CSS
-@import "scaffolding.less";   //脚手架样式
-@import "type.less";          //排版样式
-@import "code.less";          //代码样式
-@import "grid.less";          //柵格样式
-@import "tables.less";        //表格样式
-@import "forms.less";         //表单样式
-@import "buttons.less";       //按钮样式
-
-// Components  组件
-@import "component-animations.less";
-@import "dropdowns.less";
-@import "button-groups.less";
-@import "input-groups.less";
-@import "navs.less";
-@import "navbar.less";
-@import "breadcrumbs.less";
-@import "pagination.less";
-@import "pager.less";
-@import "labels.less";
-@import "badges.less";
-@import "jumbotron.less";
-@import "thumbnails.less";
-@import "alerts.less";
-@import "progress-bars.less";
-@import "media.less";
-@import "list-group.less";
-@import "panels.less";
-@import "responsive-embed.less";
-@import "wells.less";
-@import "close.less";
-
-// Components w/ JavaScript  js组件
-@import "modals.less";
-@import "tooltip.less";
-@import "popovers.less";
-@import "carousel.less";
-
-// Utility classes  公共类
-@import "utilities.less";
-@import "responsive-utilities.less";</code></pre>
-        <p>
-          简单的说，@import声明就是用来组织样式表结构的。不管样式表分成了多少个Less文件，
-          结构上分了多少层，最后编译输出、使用在网页中的样式表就只有一个(bootstrap.css)。
-          此外，考虑到样式表的层叠性与选择器优先级，这里文件加载顺序也很重要。
-        </p>
-      </li>
     </ol>
   </article>
 </div>

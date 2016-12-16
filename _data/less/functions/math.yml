@@ -1,0 +1,197 @@
+- name: ceil
+  desc: Rounds up to the next highest integer.
+  para:
+    - type: number
+      desc: a floating point number.
+  return: integer
+  example: |
+    ceil(2.4) // => 3
+
+- name: floor
+  desc: Rounds down to the next lowest integer
+  para:
+    - type: number
+      desc: a floating point number.
+  return: integer
+  example: |
+    floor(2.6) // => 2
+
+- name: percentage
+  desc: Converts a floating point number into a percentage string
+  para:
+    - type: number
+      desc: a floating point number.
+  return: string
+  example: |
+    percentage(0.5) // => 50%
+
+- name: round
+  desc: Applies rounding
+  para:
+    - type: number
+      desc: a floating point number.
+    - type: decimalPlaces
+      desc: (Optional) The number of decimal places to round to. Defaults to 0
+  return: number
+  example: |
+    round(1.67) // => 2
+    round(1.67, 1) // => 1.7
+
+- name: sqrt
+  desc: Calculates square root of a number. Keeps units as they are
+  para:
+    - type: number
+      desc: a floating point number.
+  return: number
+  example: |
+    sqrt(25cm) // => 5cm
+    sqrt(18.6%) // => 4.312771730569565%;
+
+- name: abs
+  desc: Calculates absolute value of a number. Keeps units as they are.
+  para:
+    - type: number
+      desc: a floating point number.
+  return: number
+  example: |
+    abs(25cm) //=> 25cm
+    abs(-18.6%) //=> 18.6%
+
+- name: sin
+  desc: Calculates sine function.Assumes radians on numbers without units
+  para:
+    - type: number
+      desc: a floating point number.
+  return: number
+  example: |
+    sin(1); // sine of 1 radian => 0.8414709848078965;
+    sin(1deg); // sine of 1 degree => 0.01745240643728351;
+    sin(1grad); // sine of 1 gradian => 0.015707317311820675;
+
+- name: asin
+  desc: >
+    Calculates arcsine (inverse of sine) function.
+    Returns number in radians e.g. a number between -π/2 and π/2.
+  para:
+    - type: number
+      desc: floating point number from [-1, 1] interval
+  return: number
+  example: |
+    asin(-0.8414709848078965) //=> -1rad
+    asin(0) //=> 0rad
+    asin(2) //=> NaNrad
+
+- name: cos
+  desc: >
+    Calculates cosine function.
+    Assumes radians on numbers without units.
+  para:
+    - type: number
+      desc: a floating point number
+  return: number
+  example: |
+    cos(1) // cosine of 1 radian //=> 0.5403023058681398
+    cos(1deg) // cosine of 1 degree //=> 0.9998476951563913
+    cos(1grad) // cosine of 1 gradian //=> 0.9998766324816606
+
+- name: acos
+  desc: >
+    Calculates arccosine (inverse of cosine) function.
+    Returns number in radians e.g. a number between 0 and π.
+  para:
+    - type: number
+      desc: a floating point number from [-1, 1] interval
+  return: number
+  example: |
+    acos(0.5403023058681398) //=> 1rad
+    acos(1) //=> 0rad
+    acos(2) //=> NaNrad
+
+- name: tan
+  desc: >
+    Calculates tangent function.
+    Assumes radians on numbers without units.
+  para:
+    - type: number
+      desc: a floating point number.
+  return: number
+  example: |
+    tan(1) // tangent of 1 radian => 1.5574077246549023
+    tan(1deg) // tangent of 1 degree => 0.017455064928217585
+    tan(1grad) // tangent of 1 gradian => 0.015709255323664916
+
+- name: atan
+  desc: >
+    Calculates arctangent (inverse of tangent) function.
+    Returns number in radians e.g. a number between -π/2 and π/2.
+  para:
+    - type: number
+      desc: a floating point number.
+  return: number
+  example: |
+    atan(-1.5574077246549023) //=> -1rad
+    atan(0) //=> 0rad
+    round(atan(22), 6) // arctangent of 22 rounded to 6 decimal places => 1.525373rad;
+
+- name: pi
+  desc: Returns π (pi);
+  para:
+    - type:
+      desc: none
+  return: number
+  example: |
+    pi() //=> 3.141592653589793
+
+- name: pow
+  desc: >
+    Returns the value of the first argument raised to the power of the second argument.
+    Returned value has the same dimension as the first parameter and the dimension of the second parameter is ignored.
+  para:
+    - type: number
+      desc: base -a floating point number.
+    - type: number
+      desc: exponent - a floating point number
+  return: number
+  example: |
+    pow(0cm, 0px) //=> 1cm
+    pow(25, -2) //=> 0.0016
+    pow(25, 0.5) //=> 5
+    pow(-25, 0.5) //=> NaN
+    pow(-25%, -0.5) //=> NaN%
+
+- name: mod
+  desc: >
+    Returns the value of the first argument modulus second argument.
+    Returned value has the same dimension as the first parameter,
+    the dimension of the second parameter is ignored.
+    The function is able to handle also negative and floating point numbers.
+  para:
+    - type: number
+      desc: a floating point number.
+    - type: number
+      desc: a floating point number
+  return: number
+  example: |
+    mod(0cm, 0px) //=> NaNcm
+    mod(11cm, 6px); //=> 5cm
+    mod(-26%, -5); //=> -1%
+
+- name: min
+  desc: Returns the lowest of one or more values.
+  para:
+    - type: number
+      desc: value1, ..., valueN - one or more values to compare
+  return: the lowest value.
+  example: |
+    min(5, 10); //=> 5
+    min(3px, 42px, 1px, 16px); //=> 1px
+
+- name: max
+  desc: Returns the highest of one or more values
+  para:
+    - type: number
+      desc: value1, ..., valueN - one or more values to compare.
+  return: the highest value
+  example: |
+    max(5, 10); //=> 10
+    max(3%, 42%, 1%, 16%); //=> 42%

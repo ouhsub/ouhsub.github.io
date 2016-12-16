@@ -1,0 +1,166 @@
+- name: isnumber
+  desc: 是否是数值
+  para:
+    - type: value
+      desc: 等待评估的值/变量
+  return: 如果是数值返回true，否则返回false
+  example: |
+    isnumber(#ff0);     // false
+    isnumber(blue);     // false
+    isnumber("string"); // false
+    isnumber(1234);     // true
+    isnumber(56px);     // true
+    isnumber(7.8%);     // true
+    isnumber(keyword);  // false
+    isnumber(url(...)); // false
+
+- name: isstring
+  desc: 是否是字符串
+  para:
+    - type: value
+      desc: 等待评估的值/变量
+  return: 如果是字符串返回true，否则返回false
+  example: |
+    isstring(#ff0);     // false
+    isstring(blue);     // false
+    isstring("string"); // true
+    isstring(1234);     // false
+    isstring(56px);     // false
+    isstring(7.8%);     // false
+    isstring(keyword);  // false
+    isstring(url(...)); // false
+
+- name: iscolor
+  desc: 是否是颜色值
+  para:
+    - type: value
+      desc: 等待评估的值/变量
+  return: 如果是颜色返回true，否则返回false
+  example: |
+    iscolor(#ff0);     // true
+    iscolor(blue);     // true
+    iscolor("string"); // false
+    iscolor(1234);     // false
+    iscolor(56px);     // false
+    iscolor(7.8%);     // false
+    iscolor(keyword);  // false
+    iscolor(url(...)); // false
+
+- name: iskeyword
+  desc: 是否是关键字
+  para:
+    - type: value
+      desc: 等待评估的值/变量
+  return: 如果是给定的关键字返回true，否则返回false
+  example: |
+    iskeyword(#ff0);     // false
+    iskeyword(blue);     // false
+    iskeyword("string"); // false
+    iskeyword(1234);     // false
+    iskeyword(56px);     // false
+    iskeyword(7.8%);     // false
+    iskeyword(keyword);  // true
+    iskeyword(url(...)); // false
+
+- name: isurl
+  desc: 是否是url
+  para:
+    - type: value
+      desc: 等待评估的值/变量
+  return: 如果是url返回true，否则返回false
+  example: |
+    isurl(#ff0);     // false
+    isurl(blue);     // false
+    isurl("string"); // false
+    isurl(1234);     // false
+    isurl(56px);     // false
+    isurl(7.8%);     // false
+    isurl(keyword);  // false
+    isurl(url(...)); // true
+
+- name: ispixel
+  desc: 是否是像素表示的数值
+  para:
+    - type: value
+      desc: 等待评估的值/变量
+  return: 如果是一个像素值返回true，否则返回false
+  example: |
+    ispixel(#ff0);     // false
+    ispixel(blue);     // false
+    ispixel("string"); // false
+    ispixel(1234);     // false
+    ispixel(56px);     // true
+    ispixel(7.8%);     // false
+    ispixel(keyword);  // false
+    ispixel(url(...)); // false
+
+- name: isem
+  desc: 是否是一个em值
+  para:
+    - type: value
+      desc: 等待评估的值/变量
+  return: 如果是em值返回true，否则返回false
+  example: |
+    isem(#ff0);     // false
+    isem(blue);     // false
+    isem("string"); // false
+    isem(1234);     // false
+    isem(56px);     // false
+    isem(7.8em);    // true
+    isem(keyword);  // false
+    isem(url(...)); // false
+
+- name: ispercentage
+  desc: 是否是百分比值
+  para:
+    - type: value
+      desc: 等待评估的值/变量
+  return: 如果是百分比返回true，否则返回false
+  example: |
+    ispercentage(#ff0);     // false
+    ispercentage(blue);     // false
+    ispercentage("string"); // false
+    ispercentage(1234);     // false
+    ispercentage(56px);     // false
+    ispercentage(7.8%);     // true
+    ispercentage(keyword);  // false
+    ispercentage(url(...)); // false
+
+- name: isunit
+  desc: 是否是一个特定单位的值
+  para:
+    - type: value
+      desc: 等待评估的值/变量
+    - type: unit
+      desc: 一个用于测试的单位(括号可选)
+  return: 如果单位符合返回true，否则返回false
+  example: |
+    isunit(11px, px);  // true
+    isunit(2.2%, px);  // false
+    isunit(33px, rem); // false
+    isunit(4rem, rem); // true
+    isunit(56px, "%"); // false
+    isunit(7.8%, '%'); // true
+    isunit(1234, em);  // false
+    isunit(#ff0, pt);  // false
+    isunit("mm", mm);  // false
+
+- name: isruleset
+  desc: 是否是规则列表
+  para:
+    - type: value
+      desc: 等待评估的值/变量
+  return: 如果是规则列表返回true，否则返回false
+  example: |
+    @rules: {
+      color: red;
+    }
+    isruleset(@rules);   // true
+    isruleset(#ff0);     // false
+    isruleset(blue);     // false
+    isruleset("string"); // false
+    isruleset(1234);     // false
+    isruleset(56px);     // false
+    isruleset(7.8%);     // false
+    isruleset(keyword);  // false
+    isruleset(url(...)); // false

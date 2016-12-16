@@ -5,7 +5,7 @@
     <p>
       {% for cate in page.categories %}
       {% if cate != 'blog' and cate != 'docs' %}
-      <a href="{{ BASE_PATH }}/category/?target={{ cate }}">{{ cate }}</a>
+      <a href="{{ BASE_PATH }}/blog/{{ cate }}">{{ cate }}</a>
       {% endif %}
       {% endfor %}
     </p>
