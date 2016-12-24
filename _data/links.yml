@@ -34,6 +34,10 @@
 
 - name: 语言类
   data:
+    - name: HTML5 Specification
+      url: https://html.spec.whatwg.org/
+      desc: HTML Living Standard
+
     - name: Liquid
       url: https://shopify.github.io/liquid/
       desc: Liquid官方文档
@@ -76,6 +80,10 @@
     - name: ReactJS
       url: https://facebook.github.io/react/
       desc: ReactJS官网
+
+    - name: Mithril
+      url: http://mithril.js.org/
+      desc: Mithril官网
 
     - name: Foundation
       url: http://foundation.zurb.com/
