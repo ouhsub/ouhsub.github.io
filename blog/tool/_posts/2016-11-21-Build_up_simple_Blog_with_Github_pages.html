@@ -1,0 +1,448 @@
+---
+layout: blog
+title: 博客搭建记录
+excerpt: >
+  Github Pages是Github提供的一个静态网页空间，
+  利用Github Pages可以快速的创建属于你自己的个人博客站点，而且完全免费。
+  如何用Github Pages搭建一个简单的博客站点？
+tags: jekyll git github liquid
+chapters: [创建站点仓库, 利用Jekyll生成站点, 部署发布]
+scripts: [prism.default.basic]
+styles: [prism.default.basic]
+---
+
+{% include blog_head.html %}
+<hr>
+<div class="blog-body">
+  <div class="chapter-item">
+    <a name="创建站点仓库"></a>
+    <h2 class="chapter-title">创建站点仓库</h2>
+    <article>
+      <p>
+        <a href="https://pages.github.com" target="_blank">Github Pages</a>
+        寄存着基于仓库生成的用户、组织或项目站点页面。站点大体可以分为两种类型：用户/组织站点和项目站点。
+        更多具体细节可查阅
+        <a href="https://help.github.com/categories/github-pages-basics/" target="_blank">Github Pages的帮助文档</a>。
+      </p>
+      <h3>&lt;username&gt;.github.io</h3>
+      <p>
+        用户站点需要创建在一个指定命名为&lt;username&gt;.github.io的仓库中，username即账户名称。
+        这个仓库的master分支将被用于创建和发布用户站点。
+        创建完成后在仓库的master分支下新建一个文件：
+      <pre><code class="language-markup">&lt;!-- file:index.html --&gt;
+&lt;h1&gt;Hello World!&lt;/h1&gt;</code></pre>
+      此时通过https://username.github.io就可以访问到刚刚创建的页面了。
+      </p>
+      <h3>项目站点</h3>
+      <p>
+        创建项目站点有三种方式:
+        <ol>
+          <li>master分支</li>
+          <li>gh-pages分支</li>
+          <li>master分支下/docs文件夹</li>
+        </ol>
+        <p>
+          在选定的分支或文件夹下创建页面后，进入仓库的设置面板，找到Github Pages设置区块，
+          将资源设置为相应的分支/文件夹就可以了
+          (repository-&gt;setting-&gt;-&gt;Github Pages-&gt;Source)。
+        </p>
+        <p>
+          此时通过https://username.github.io/repository-name/就可以访问项目主页了。
+        </p>
+      </p>
+    </article>
+  </div>
+  <div class="chapter-item">
+    <a name="利用Jekyll生成站点"></a>
+    <h2 class="chapter-title">利用Jekyll生成站点</h2>
+    <article>
+      <h3>为什么用Jekyll</h3>
+      <div>
+        <p>
+          <a href="http://jekyllrb.com/" target="_blank">Jekyll</a>是一个静态站点生成器，
+          可以方便地将网页分解、组件化，并且支持高级模板特性和Jekyll主题。
+          虽然Github Pages支持 <strong>任意一种</strong> 静态站点生成器，
+          而这其中Jekyll是其文档中唯一提供详细描述的。
+        </p>
+        <p>
+          在Jekyll的诸多优势中，我比较看重的是 利用Liquid模板引擎可以方便地组织站点数据结构，
+          而站点的通用模板(如header、footer等)都是通过这一特性实现的。此外，
+          还可以使用易读易写的Markdown代替HTML，在不引入CSS文件的前提下使用
+          <a href="http://themes.jekyllrc.org/" target="_blank">Jekyll主题</a>等。
+        </p>
+      </div>
+      <h3>搭建Jekyll本地工作环境</h3>
+      <ol>
+        <li>
+           配置环境需求
+           <p>
+            Jekyll依赖于Ruby，所以安装前需要先搭建Ruby的运行环境。
+            用<a href="http://rvm.io/" target="_blank">RVM</a>对Ruby进行版本管理，
+            通过RubyGem来安装Jekyll，管理起来比较方便。<br>
+            <code class="language-bash">
+              $ gem install jekyll bundler
+            </code>
+           </p>
+        </li>
+        <li>
+          用命令行生成预定义配置的Jekyll项目
+          <pre><code class="language-bash">$ jekyll new blog   # 创建新项目
+$ cd blog   # 进入项目目录
+$ jekyll server   # 开启本地服务器预览</code></pre>
+          此时访问本地localhost:4000即可查看默认生成的Jekyll项目了。
+        </li>
+      </ol>
+      <h3>组织项目结构</h3>
+      新建项目的目录结构:
+      <p>
+        我的需求是: 首先要有首页、作品、博客、关于四个页面，其中首页用于展示最近10篇文章的列表及其他杂项;
+        博客页用于展示所有文章的列表;作品用于展示仓库项目的列表;关于用于展示个人信息。
+        此外还需要一个分类页面，用于展示特定类目的文章列表;一个标签页面，用于展示特定标签的文章列表。其余的就是每篇文章的页面了。
+      </p>
+      <p>
+        要完成这里的需求，单靠预定义配置生成的结构还是太单薄了，需要对目录结构和数据结构进行进一步的完善。
+      </p>
+      <ol>
+        <li>
+          目录结构
+          <ul class="dir-container">
+            <li>_config.yml</li>
+            <li>
+              _drafts
+              <span class="open-trigger">-</span>
+              <ul class="dir-container">
+                <li>Liquid_detailed.html</li>
+                <li>Jekyll_detailed.html</li>
+              </ul>
+            </li>
+            <li>
+            <li>
+              _data
+              <span class="open-trigger">-</span>
+              <ul class="dir-container">
+                <li>projects.yml</li>
+              </ul>
+            </li>
+            <li>
+              _includes
+              <span class="open-trigger">-</span>
+              <ul class="dir-container">
+                <li>head.html</li>
+                <li>header.html</li>
+                <li>sider.html</li>
+                <li>widget.html</li>
+                <li>footer.html</li>
+              </ul>
+            </li>
+            <li>
+              _layouts
+              <span class="open-trigger">-</span>
+              <ul class="dir-container">
+                <li>default.html</li>
+                <li>post.html</li>
+              </ul>
+            </li>
+            <li>
+              blog
+              <span class="open-trigger">-</span>
+              <ul class="dir-container">
+                <li>
+                  basic
+                  <span class="open-trigger">-</span>
+                  <ul class="dir-container">
+                    <li>index.html</li>
+                    <li>
+                      _posts
+                      <span class="open-trigger">-</span>
+                      <ul class="dir-container">
+                        <li>2016-11-22-Blog_Templete.html</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  master
+                  <span class="open-trigger">-</span>
+                  <ul class="dir-container">
+                    <li>index.html</li>
+                    <li>
+                      _posts
+                      <span class="open-trigger">-</span>
+                      <ul class="dir-container">
+                        <li>2016-11-24-JQuery_Detailed.html</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  index.html
+                </li>
+              </ul>
+            </li>
+            <li>
+              assets
+              <span class="open-trigger">-</span>
+              <ul class="dir-container">
+                <li>
+                  styles
+                  <span class="open-trigger">-</span>
+                  <ul class="dir-container">
+                    <li>main.css</li>
+                  </ul>
+                </li>
+                <li>
+                  imgs
+                  <span class="open-trigger">-</span>
+                  <ul class="dir-container">
+                    <li>logo.svg</li>
+                  </ul>
+                </li>
+                <li>
+                  scripts
+                  <span class="open-trigger">-</span>
+                  <ul class="dir-container">
+                    <li>main.js</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              about.html
+            </li>
+            <li>
+              project.html
+            </li>
+            <li>
+              tag.html
+            </li>
+            <li>index.html</li>
+            <li>.gitignore</li>
+          </ul>
+          <p>
+            通过这个结构，主要实现了这样几个需求：
+            <ul>
+              <li>
+                <p>
+                  通过/blog/*/_posts/对文章进行分类，其中/blog/index.html用于展示所有文章列表，
+                  /blog/*/index.html则用于展示每个类目下的文章列表
+                </p>
+              </li>
+              <li>
+                <p>
+                  /index.html、/about.html、/project.html/、/tag.html
+                  分别是首页、关于、项目和每个标签类文章列表的页面
+                </p>
+              </li>
+              <li>
+                <p>
+                  /_data/projects.yml用于存储仓库项目的数据
+                </p>
+              </li>
+              <li>
+                <p>
+                  /_drafts/、/_layouts/、/_includes/这些预置文件夹分别用于存储草稿、模板和网页部件
+                </p>
+              </li>
+              <li>
+                <p>
+                  /assets/用于存储静态文件
+                </p>
+              </li>
+            </ul>
+          </p>
+        </li>
+        <li>
+          数据结构
+          <p>
+            Jekyll站点数据结构的组织全靠Liquid模板引擎。
+            而其数据主要来自这三个地方:每篇文章的YAML头信息、配置文件_config.yml
+            以及存放于/_data/目录下的数据文件。
+          </p>
+          <p>
+            <strong>_config.yml配置文件</strong><br>
+            除对站点进行基础配置外，_config.yml文件下还可以定义一些站点级(site)的信息、数据变量等。
+            网站的meta头信息，比如author、description等都可以在这里设置。
+            <pre><code class="language-yaml"># _config.yml
+
+# 站点设置(Site setting)
+# 在这里设置的变量可以在页面中通过Output标记调用，如:{% raw %}{{ site.title }}{% endraw %}
+# 可以创建任意的自定义变量variables，然后通过{% raw %}{{ site.variables }}{% endraw %}调用。
+
+title: "Ouhsub" # 站点标题
+email: "ouhsub.gmail.com" # 邮箱地址
+description: > # 这个符号(>)表示定义多行。
+  Write an awesome description for your new site here. You can edit this
+  line in _config.yml. It will appear in your document head meta (for
+  Google search results) and in your feed.xml site description.
+baseurl: "/projects" # 站点子路径 e.g. /blog
+url: "https://ouhsub.github.io" # 站点的主机名和协议, e.g. http://example.com
+custome_variable: "value" # 自定义变量。
+
+# 渲染设置(Build settings)
+markdown: kramdown
+theme: minima
+gems:
+- jekyll-feed
+exclude:
+- Gemfile
+- Gemfile.lock</code></pre>
+          </p>
+
+          <p>
+            <strong>YAML头信息</strong><br>
+            定义在每篇文章或页面头部，用上下三个短横线包围的局部配置信息，如：
+            <pre><code class="language-markup">&lt;!-- 2016-11-23-Build_up_Github_Pages.html --&gt;</code><code class="language-yaml">
+---
+layout: blog  #选择模板
+title: 博客搭建记录  #定义页面标题
+excerpt: >  #用于覆写自动生成的文章摘要的变量
+  Github Pages是Github提供的一个静态网页空间，
+  利用Github Pages可以快速的创建属于你自己的个人博客站点，
+  而且完全免费。
+  那么我是如何利用Github Pages搭建本站点的呢？
+tags: Jekyll git github Liquid  #定义多个文章标签
+published: true  #是否发布文章
+#自定义的变量
+chapters: [创建站点仓库, 利用Jekyll生成站点]  #用于文章头部和侧边栏的子级导航数组
+script: [prism.default.basic, chart]  #用于动态加载JS脚本的数组
+style: [prism.default.basic]  #用于动态加载CSS样式表的数组
+---</code></pre>
+            文章或页面的YAML头信息中定义的变量都可以通过对文章或页面的引用(如page或任意其他标识符)
+            {% raw %}{{ page.variables }}{% endraw %}调用，
+            要与调用站点级变量时使用的{% raw %}{{ site.variables }}{% endraw %}区别开。
+          </p>
+          <p>
+            <strong>数据文件</strong><br>
+            Jekyll引擎可以自动加载定义在/_data/文件夹下的数据文件，这些文件主要保存着格式化的
+            站点数据。
+            <pre><code class="language-yaml">#/_data/projects.yml
+- name:     SVG icon lib
+  excerpt:  到底是用svg？sprits？还是icon font？
+  url:      https://ouhsub.github.io/svg_icon_lib
+  path:     https://github.com/ouhsub/svg_icon_lib
+  start:    "2016-11-26"
+  finished: true
+
+- name:     CSS Layout
+  excerpt:  CSS页面布局
+  url:      https://ouhsub.github.io/css_layout
+  path:     https://github.com/ouhsub/css_layout
+  start:    "2016-11-25"
+  finished: false</code></pre>
+            可以通过文件名访问数据文件中的数据: {% raw %}{{ site.projects }}{% endraw %}，
+            利用Liquid就可以将这些数据循环输出到页面上了。
+          </p>
+          <p>
+            <strong>Liquid</strong><br>
+            <a href="https://shopify.github.io/liquid/" target="_blank">Liquid</a>
+            是一个应特殊需求而生的模板引擎。
+            它有两种标记类型,
+            Output标记，用于输出文本: {% raw %}{{ }}{% endraw %};
+            Tag标记，用于执行命令或者处理格式: {% raw %}{% %}{% endraw %}。
+            Jekyll中的所有逻辑和数据输出都是通过Liquid实现的。
+          </p>
+        </li>
+      </ol>
+      <h3>编辑内容</h3>
+      <p>
+        Jekyll的内容系统可以以下几种:
+      </p>
+      <ol>
+        <li>
+          Pages
+          <p>
+            Pages主要用来创建主页、关于这样的独立页面。可以通过命名文件或命名包含index.html的文件夹来创建。
+            这两种方式的主要区别是访问页面的URL，但是通过在pages的YAML头信息中设置permalink也可以改变URL啦啦啦。
+            此外，pages页面包含YAML头信息，可以通过{% raw %}{{ site.pages }}{% endraw %}访问所有独立页面。
+            如果不包含YAML头信息，则作为静态文件处理。
+          </p>
+        </li>
+        <li>
+          Posts
+          <p>
+            Posts就是文章啦，要放在_posts文件夹下，且命名需遵循一定格式: YEAR-MONTH-DAY-title.MARKUP。
+            包含YAML头信息后，就可以按照喜欢的格式写文章了。通过{% raw %}{{ site.posts }}{% endraw %}
+            可以获取所有文章的引用。
+          </p>
+        </li>
+        <li>
+          Drafts
+          <p>
+            放在/_drafts/目录下的文章就是草稿，草稿不需要遵循命名格式。想预览草稿可以在开启Jekyll服务器的时候
+            加上--drafts参数: <code class="language-bash">$ jekyll server --drafts</code>，
+            或者设置配置项: <code class="language-yaml">show_drafts: true</code>。草稿将使用当前时间被渲染。
+          </p>
+        </li>
+        <li>
+          Data Files
+          <p>
+            数据文件用来存储格式化的数据，通过{% raw %}{{ site.data }}{% endraw %}即可访问这些数据。
+          </p>
+        </li>
+        <li>
+          Static Files
+          <p>
+            静态文件其实就是不包含YAML头信息，不会被Liquid模板引擎处理的文件。
+            通过{% raw %}{{ site.static_files }}{% endraw %}可以访问这些文件的引用。
+            站点的辅助文件(/assset/)一般都是静态文件。
+          </p>
+        </li>
+      </ol>
+    </article>
+    <p>
+      Jekyll功能全面，操作简单，作为一个静态页面生成器简直棒棒哒！关于主题和插件等
+      更多Jekyll相关知识请查阅<a href="http://jekyllrb.com/docs/home/" target="_blank">官方文档</a>。
+    </p>
+  </div>
+  <div class="chapter-item">
+    <a name="部署发布"></a>
+    <h2 class="chapter-title">部署发布</h2>
+    <article>
+      <ol>
+        <li>
+          数据更新
+          <p>
+            文章写好后，初始化本地仓库并push到github上的仓库下就可以了。然后通过http://username.github.io就可以访问站点了。
+          </p>
+        </li>
+        <li>
+          域名绑定
+          <p>
+            可以在仓库的设置面板中绑定自己选定的域名，具体操作细节可参考
+            <a href="https://help.github.com/articles/using-a-custom-domain-with-github-pages/" target="_blank">官方文档</a>。
+          </p>
+        </li>
+        <li>
+          限制
+          <ul>
+            <li>
+              Github Pages 仓库源推荐不超过1GB。
+            </li>
+            <li>
+              已发布的Github Pages站点尺寸不能超过1GB。
+            </li>
+            <li>
+              Github Pages站点每个月的访问限制为100GB带宽或者100,000个请求。
+            </li>
+            <li>
+              GitHub Pages每小时最多渲染10次。
+            </li>
+          </ul>
+        </li>
+      </ol>
+    </article>
+  </div>
+</div>
+<hr>
+<div class="blog-foot">
+  <h3>相关文章</h3>
+  <p class="link-item">
+    <a href="{{ BASE_URL }}/docs/">Liquid Doc</a>
+    <a href="{{ BASE_URL }}/docs/2016/11/25/jekyll_doc.html">Jekyll Doc</a>
+    <a href="{{ BASE_URL }}/docs/">YAML Doc</a>
+  </p>
+  <h3>参考资料</h3>
+  <p class="link-item">
+    <a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers" target="_blank">Liquid for Designers</a>
+  </p>
+</div>

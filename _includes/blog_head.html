@@ -1,0 +1,28 @@
+<div class="blog-head">
+  <h1 class="blog-title">{{ page.title }}</h1>
+  <div class="blog-info">
+    <p>{{ page.date | date_to_string }}</p>
+    <p>
+      {% for cate in page.categories %}
+      {% if cate != 'blog' and cate != 'docs' %}
+      <a href="{{ BASE_PATH }}/blog/{{ cate }}">{{ cate }}</a>
+      {% endif %}
+      {% endfor %}
+    </p>
+    <p>
+      {% for tag in page.tags %}
+      <a href="{{ BASE_PATH }}/tag?target={{ tag }}">{{ tag }}</a>
+      {% endfor %}
+    </p>
+    <p class="blog-excerpt">{{ page.excerpt }}</p>
+  </div>
+  {% if page.chapters != null %}
+  <div class="blog-catalog">
+    <ul>
+      {% for chapter in page.chapters %}
+      <li><a href="#{{ chapter }}">{{ chapter }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+</div>
